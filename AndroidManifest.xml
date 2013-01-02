@@ -4,8 +4,8 @@
     android:versionName="2.0.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="10"
+        android:targetSdkVersion="16" />
 
    <compatible-screens>
         <!-- all small size screens -->
@@ -45,7 +45,14 @@
    <!-- Keeps the processor from sleeping when a message is received. -->
    <uses-permission android:name="android.permission.WAKE_LOCK"/>
  
+   <uses-feature android:name="android.hardware.nfc" android:required="true" />
 	<uses-permission android:name="android.permission.NFC" />
+
+   <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+   <uses-feature android:name="aandroid.hardware.microphone" android:required="true"></uses-feature>
+   <uses-feature android:name="android.hardware.touchscreen" android:required="true"></uses-feature>
+   <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
 	
     <application
         android:icon="@drawable/ic_launcher"
@@ -70,11 +77,17 @@
         		<category android:name="android.intent.category.DEFAULT" />
         		<data android:mimeType="image/*" />
       		</intent-filter>
+      		<!--
       		<intent-filter>
       			<action android:name="android.nfc.action.NDEF_DISCOVERED" />
       			<data android:mimeType="application/kickbak" />
       			<category android:name="android.intent.category.DEFAULT" />
       		</intent-filter>
+      		<intent-filter>
+               <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+               <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            -->
         </activity>
         <!-- ZXing activities -->
         <activity android:name="com.google.zxing.client.android.CaptureActivity"
@@ -94,5 +107,5 @@
               <category android:name="android.intent.category.DEFAULT"/>
            </intent-filter>
        </activity>
-    </application>
+        </application>
 </manifest>

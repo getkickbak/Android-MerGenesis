@@ -1,0 +1,6 @@
+{
+   "v0" : "abcdefghijklmnopqrstuvwxyz123456",
+   "r0" : "abcdefghijklmnopqrstuvwxyz123456",
+   "venue" : "License Key Missing!",
+   "venueId" : '0'
+}

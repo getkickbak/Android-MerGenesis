@@ -1,0 +1,35 @@
+{
+	"data": [
+		{
+			"name": "Earn Reward Pts",
+			"photo_url": "resources/themes/images/{platform_path}/mainicons/rewards.png",
+			"desc": "Rewards",
+			"pageCntlr": "server.Rewards",
+			"subFeature": "rewards"
+		}, {
+			"name": "Challenges",
+			"photo_url": "resources/themes/images/{platform_path}/mainicons/challenges.png",
+			"desc": "Challenges",
+			"pageCntlr": "server.Challenges"
+		}, {
+			"name": "Redeem Rewards",
+			"photo_url": "resources/themes/images/{platform_path}/mainicons/redeem.png",
+			"desc": "Redeem Rewards",
+			"pageCntlr": "server.Redemptions",
+			"route": "redemptions"
+		}, {
+			"name": "Redeem Prizes",
+			"photo_url": "resources/themes/images/{platform_path}/mainicons/prizes.png",
+			"desc": "Redeem Prizes",
+			"pageCntlr": "server.Prizes",
+			"route": "prizes"
+		}, {
+			"name": "Settings",
+			"photo_url": "resources/themes/images/{platform_path}/mainicons/settings.png",
+			"desc": "Settings",
+			"route": "serverSettings",
+			"pageCntlr": "Settings",
+			"subFeature": "server"
+		}
+	]
+}

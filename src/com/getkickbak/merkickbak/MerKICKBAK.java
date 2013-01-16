@@ -27,6 +27,7 @@ public class MerKICKBAK extends DroidGap
 		super.setIntegerProperty("loadUrlTimeoutValue", 60000);
 		super.setIntegerProperty("splashscreen", R.drawable.splash);
 		super.loadUrl("file:///android_asset/www/index.html", 10000);
+		appView.getSettings().setGeolocationDatabasePath("/data/data/"+this.getPackageName()+"/");
 		try
 		{
 			CookieManager.getInstance().setAcceptCookie(true);

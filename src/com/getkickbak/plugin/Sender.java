@@ -57,7 +57,7 @@ public class Sender extends Communicator
 
 		cleanup();
 		// audioBuf = WaveTools.wavread(inputPath, fs, this);
-		track = new AudioTrack(AudioManager.STREAM_MUSIC, (int) fs, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
+		track = new AudioTrack(AudioManager.STREAM_RING, (int) fs, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
 		      playMinSize, AudioTrack.MODE_STATIC);
 
 		short[] buffer = DTMF.genTone(freqs, sampleRate, numSamples);

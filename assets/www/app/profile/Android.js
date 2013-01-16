@@ -54,15 +54,37 @@ function initPushwoosh()
       }, function(status)
       {
          var deviceToken = status;
-         console.warn('registerDevice: ' + deviceToken);
+         console.debug('registerDevice: ' + deviceToken);
          Genesis.constants.device =
          {
             'device_type' : pushNotifType, //1 for iOS, 3 for Android
             'device_id' : deviceToken
          };
+
+         var mainPage = _application.getController('client' + '.MainPage'), viewport = _application.getController('client' + '.Viewport');
+         if (viewport.getLoggedIn() && !mainPage.updatedDeviceToken)
+         {
+            Account['setUpdateRegUserDeviceUrl']();
+            console.log("setUpdateRegUserDeviceUrl - Refreshing Device Token ...");
+            Account.getProxy().supressErrorsPopup = true;
+            Account.load(0,
+            {
+               jsonData :
+               {
+               },
+               params :
+               {
+                  device : Ext.encode(Genesis.constants.device)
+               },
+               callback : function(record, operation)
+               {
+                  Account.getProxy().supressErrorsPopup = false;
+               }
+            });
+         }
       }, function(status)
       {
-         console.warn('failed to register : ' + JSON.stringify(status));
+         console.debug('failed to register : ' + JSON.stringify(status));
          Genesis.constants.device = null;
       });
 
@@ -78,7 +100,8 @@ function initPushwoosh()
                Ext.device.Notification.show(
                {
                   title : 'Push Notification Alert',
-                  message : title
+                  message : title,
+                  buttons : ['OK']
                });
                console.warn('push notifcation - userData [' + JSON.stringify(userData) + ']');
             }
@@ -88,6 +111,7 @@ function initPushwoosh()
             console.warn('push notifcation - Null Notification');
          }
       });
-   }
+   };
+
    pushNotification.unregisterDevice(callback, callback);
 }

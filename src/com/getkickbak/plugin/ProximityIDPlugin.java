@@ -38,6 +38,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 	private static final String STOP                 = "stop";
 	private static final String VOLUME               = "setVolume";
 
+	private boolean             merchantDevice       = true;
 	private boolean             isSender;
 	private int                 s_vol                = -1;
 	private Communicator        comm;
@@ -70,7 +71,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 		{
 			comm.pause();
 		}
-		Log.i(TAG, "Pause Triggered!");
+		// Log.i(TAG, "Pause Triggered!");
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 		{
 			comm.resume();
 		}
-		Log.i(TAG, "Resume Triggered!");
+		// Log.i(TAG, "Resume Triggered!");
 	}
 
 	private class CommunicatorTask extends AsyncTask<Void, Void, Integer[]>
@@ -274,6 +275,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 			comm = new Sender(audioMan);
 			comm.preLoad();
 			isSender = true;
+			callbackContext.success();
 		}
 		else
 		{
@@ -328,15 +330,19 @@ public class ProximityIDPlugin extends CordovaPlugin
 
 	private void stop()
 	{
-		if ((task != null) && (s_vol > 0))
+		if (task != null)
 		{
 			//
 			// Restore original volume, ready to take on more tasks
+			// This is unecessary for Merchant Device
 			//
-			if (audioMan.getStreamVolume(AudioManager.STREAM_MUSIC) != s_vol)
+			if ((merchantDevice != true) && (s_vol >= 0))
 			{
-				audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, s_vol, 0);
-				Log.i(TAG, "Setting Volume Back to [" + s_vol + "]");
+				if (audioMan.getStreamVolume(AudioManager.STREAM_MUSIC) != s_vol)
+				{
+					audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, s_vol, 0);
+					Log.i(TAG, "Setting Volume Back to [" + s_vol + "]");
+				}
 			}
 			if (comm != null)
 			{
@@ -349,8 +355,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 
 	private void setVolume(Integer v)
 	{
-		double volume = v / 100.0;
-		volume *= audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		double volume = (v / 100.0) * audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		BigDecimal d = new BigDecimal(volume).setScale(0, RoundingMode.HALF_UP);
 		if (audioMan.getStreamVolume(AudioManager.STREAM_MUSIC) != d.intValue())
 		{

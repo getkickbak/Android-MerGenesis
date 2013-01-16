@@ -46,6 +46,7 @@
    <plugin name="BumpPlugin" value="com.bump.plugin.BumpPlugin"/>
     -->
    <plugin name="ProximityIDPlugin" value="com.getkickbak.plugin.ProximityIDPlugin"/>
+   <plugin name="NotificationPlugin" value="com.getkickbak.plugin.NotificationPlugin"/>
    <plugin name="NfcPlugin" value="com.chariotsolutions.nfc.plugin.NfcPlugin"/>
 	<plugin name="WebIntent" value="com.borismus.webintent.WebIntent"/>
     <plugin name="LowLatencyAudio" value="com.phonegap.PGLowLatencyAudio" />
@@ -69,5 +70,6 @@
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
     <plugin name="Echo" value="org.apache.cordova.Echo" />
     <plugin name="Globalization" value="org.apache.cordova.Globalization" />
+    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
 </plugins>
 </cordova>

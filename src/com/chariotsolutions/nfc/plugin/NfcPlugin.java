@@ -25,162 +25,223 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NfcPlugin extends Plugin {
-	private static final String REGISTER_MIME_TYPE = "registerMimeType";
-	private static final String REGISTER_NDEF = "registerNdef";
-	private static final String REGISTER_NDEF_FORMATABLE = "registerNdefFormatable";
-	private static final String REGISTER_DEFAULT_TAG = "registerTag";
-	private static final String WRITE_TAG = "writeTag";
-	private static final String SHARE_TAG = "shareTag";
-	private static final String UNSHARE_TAG = "unshareTag";
-	private static final String INIT = "init";
-	private static final String ISENABLED = "isEnabled";
+public class NfcPlugin extends Plugin
+{
+	private static final String       REGISTER_MIME_TYPE       = "registerMimeType";
+	private static final String       REGISTER_NDEF            = "registerNdef";
+	private static final String       REGISTER_NDEF_FORMATABLE = "registerNdefFormatable";
+	private static final String       REGISTER_DEFAULT_TAG     = "registerTag";
+	private static final String       WRITE_TAG                = "writeTag";
+	private static final String       SHARE_TAG                = "shareTag";
+	private static final String       UNSHARE_TAG              = "unshareTag";
+	private static final String       INIT                     = "init";
+	private static final String       ISENABLED                = "isEnabled";
+	private static final String       REMOVE_MIME_TYPE         = "removeMimeType";
 
-	private static final String NDEF = "ndef";
-	private static final String NDEF_MIME = "ndef-mime";
-	private static final String NDEF_FORMATABLE = "ndef-formatable";
-	private static final String TAG_DEFAULT = "tag";
+	private static final String       NDEF                     = "ndef";
+	private static final String       NDEF_MIME                = "ndef-mime";
+	private static final String       NDEF_FORMATABLE          = "ndef-formatable";
+	private static final String       TAG_DEFAULT              = "tag";
 
-	private static final String TAG = "NfcPlugin";
-	private final List<IntentFilter> intentFilters = new ArrayList<IntentFilter>();
-	private final ArrayList<String[]> techLists = new ArrayList<String[]>();
+	private static final String       TAG                      = "NfcPlugin";
+	private final List<IntentFilter>  intentFilters            = new ArrayList<IntentFilter>();
+	private final ArrayList<String[]> techLists                = new ArrayList<String[]>();
 
-	private NdefMessage p2pMessage = null;
-	private PendingIntent pendingIntent = null;
+	private NdefMessage               p2pMessage               = null;
+	private PendingIntent             pendingIntent            = null;
 
-	private Intent savedIntent = null;
+	private Intent                    savedIntent              = null;
 
 	@Override
-    public PluginResult execute(String action, JSONArray data, String callbackId) {
-        Log.d(TAG, "execute " + action);
+	public PluginResult execute(String action, JSONArray data, String callbackId)
+	{
+		Log.d(TAG, "execute " + action);
 
-        createPendingIntent();
-        if (action.equalsIgnoreCase(ISENABLED)) {
-        	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-                if (this.getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
-                    return new PluginResult(Status.OK, true);
-                }
-            }
-            return new PluginResult(Status.OK, false);
-        }        
-        if (action.equalsIgnoreCase(REGISTER_MIME_TYPE)) {
-            try {
-                String mimeType = data.getString(0);
-                intentFilters.add(createIntentFilter(mimeType));
-            } catch (MalformedMimeTypeException e) {
-                return new PluginResult(Status.ERROR, "Invalid MIME Type");
-            } catch (JSONException e) {
-                return new PluginResult(Status.JSON_EXCEPTION, "Invalid MIME Type");
-            }
-            startNfc();
+		createPendingIntent();
+		if (action.equalsIgnoreCase(ISENABLED))
+		{
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+			{
+				if (this.getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) { return new PluginResult(
+				      Status.OK, true); }
+			}
+			return new PluginResult(Status.OK, false);
+		}
+		if (action.equalsIgnoreCase(REGISTER_MIME_TYPE))
+		{
+			try
+			{
+				String mimeType = data.getString(0);
+				intentFilters.add(createIntentFilter(mimeType));
+			}
+			catch (MalformedMimeTypeException e)
+			{
+				return new PluginResult(Status.ERROR, "Invalid MIME Type");
+			}
+			catch (JSONException e)
+			{
+				return new PluginResult(Status.JSON_EXCEPTION, "Invalid MIME Type");
+			}
+			startNfc();
 
-            return new PluginResult(Status.OK);
-        } else if (action.equalsIgnoreCase(REGISTER_NDEF)) {
-            addTechList(new String[]{Ndef.class.getName()});
-            startNfc();
+			return new PluginResult(Status.OK);
+		}
+		else if (action.equalsIgnoreCase(REMOVE_MIME_TYPE))
+		{
+			try
+			{
+				String mimeType = data.getString(0);
+				for (IntentFilter filter : intentFilters)
+				{
+					if (filter.getDataType(0).equals(mimeType))
+					{
+						intentFilters.remove(filter);
+						startNfc();
+						break;
+					}
+				}
+			}
+			catch (JSONException e)
+			{
+				return new PluginResult(Status.JSON_EXCEPTION, "Invalid MIME Type");
+			}
 
-            return new PluginResult(Status.OK);
-        } else if (action.equalsIgnoreCase(REGISTER_NDEF_FORMATABLE)) {
-            addTechList(new String[]{NdefFormatable.class.getName()});
-            startNfc();
+			return new PluginResult(Status.OK);
+		}
+		else if (action.equalsIgnoreCase(REGISTER_NDEF))
+		{
+			addTechList(new String[] { Ndef.class.getName() });
+			startNfc();
 
-            return new PluginResult(Status.OK);
-        }  else if (action.equals(REGISTER_DEFAULT_TAG)) {
-            addTagFilter();
-            startNfc();
+			return new PluginResult(Status.OK);
+		}
+		else if (action.equalsIgnoreCase(REGISTER_NDEF_FORMATABLE))
+		{
+			addTechList(new String[] { NdefFormatable.class.getName() });
+			startNfc();
 
-            return new PluginResult(Status.OK);
-        } else if (action.equalsIgnoreCase(WRITE_TAG)) {
-            if (getIntent() == null) {  // TODO remove this and handle LostTag
-                return new PluginResult(Status.ERROR, "Failed to write tag, received null intent");
-            }
+			return new PluginResult(Status.OK);
+		}
+		else if (action.equals(REGISTER_DEFAULT_TAG))
+		{
+			addTagFilter();
+			startNfc();
 
-            try {
-                Tag tag = savedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                NdefRecord[] records = Util.jsonToNdefRecords(data.getString(0));
-                writeTag(new NdefMessage(records), tag);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new PluginResult(Status.JSON_EXCEPTION, e.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new PluginResult(Status.ERROR, e.getMessage());
-            }
+			return new PluginResult(Status.OK);
+		}
+		else if (action.equalsIgnoreCase(WRITE_TAG))
+		{
+			if (getIntent() == null)
+			{ // TODO remove this and handle LostTag
+				return new PluginResult(Status.ERROR, "Failed to write tag, received null intent");
+			}
 
-            return new PluginResult(Status.OK);
+			try
+			{
+				Tag tag = savedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+				NdefRecord[] records = Util.jsonToNdefRecords(data.getString(0));
+				writeTag(new NdefMessage(records), tag);
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+				return new PluginResult(Status.JSON_EXCEPTION, e.getMessage());
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return new PluginResult(Status.ERROR, e.getMessage());
+			}
 
-        } else if (action.equalsIgnoreCase(SHARE_TAG)) {
+			return new PluginResult(Status.OK);
 
-            try {
-                NdefRecord[] records = Util.jsonToNdefRecords(data.getString(0));
-                this.p2pMessage = new NdefMessage(records);
+		}
+		else if (action.equalsIgnoreCase(SHARE_TAG))
+		{
 
-                startNdefPush();
+			try
+			{
+				NdefRecord[] records = Util.jsonToNdefRecords(data.getString(0));
+				this.p2pMessage = new NdefMessage(records);
 
-            } catch (JSONException e) {
-                return new PluginResult(Status.JSON_EXCEPTION, "Error reading NDEF message from JSON");
-            }
+				startNdefPush();
 
-            return new PluginResult(Status.OK);
+			}
+			catch (JSONException e)
+			{
+				return new PluginResult(Status.JSON_EXCEPTION, "Error reading NDEF message from JSON");
+			}
 
-        } else if (action.equalsIgnoreCase(UNSHARE_TAG)) {
-            p2pMessage = null;
-            stopNdefPush();
-            return new PluginResult(Status.OK);
+			return new PluginResult(Status.OK);
 
-        } else if (action.equalsIgnoreCase(INIT)) {
-            Log.d(TAG, "Enabling plugin " + getIntent());
+		}
+		else if (action.equalsIgnoreCase(UNSHARE_TAG))
+		{
+			p2pMessage = null;
+			stopNdefPush();
+			return new PluginResult(Status.OK);
 
-            startNfc();
-            if (!recycledIntent()) {
-                parseMessage();
-            }
-            return new PluginResult(Status.OK);
+		}
+		else if (action.equalsIgnoreCase(INIT))
+		{
+			Log.d(TAG, "Enabling plugin " + getIntent());
 
-        }
-        Log.d(TAG, "no result");
-        return new PluginResult(Status.NO_RESULT);
-    }
+			startNfc();
+			if (!recycledIntent())
+			{
+				parseMessage();
+			}
+			return new PluginResult(Status.OK);
 
-	private void createPendingIntent() {
-		if (pendingIntent == null) {
+		}
+		Log.d(TAG, "no result");
+		return new PluginResult(Status.NO_RESULT);
+	}
+
+	private void createPendingIntent()
+	{
+		if (pendingIntent == null)
+		{
 			Activity activity = getActivity();
 			Intent intent = new Intent(activity, activity.getClass());
-			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
-					| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
 		}
 	}
 
-	private void addTechList(String[] list) {
+	private void addTechList(String[] list)
+	{
 		this.addTechFilter();
 		this.addToTechList(list);
 	}
 
-	private void addTechFilter() {
+	private void addTechFilter()
+	{
 		intentFilters.add(new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED));
 	}
 
-	private void addTagFilter() {
+	private void addTagFilter()
+	{
 		intentFilters.add(new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED));
 	}
 
-	private void startNfc() {
+	private void startNfc()
+	{
 		createPendingIntent(); // onResume can call startNfc before execute
 
-		getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				NfcAdapter nfcAdapter = NfcAdapter
-						.getDefaultAdapter(getActivity());
+		getActivity().runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
-				if (nfcAdapter != null) {
-					nfcAdapter.enableForegroundDispatch(getActivity(),
-							getPendingIntent(), getIntentFilters(),
-							getTechLists());
+				if (nfcAdapter != null)
+				{
+					nfcAdapter.enableForegroundDispatch(getActivity(), getPendingIntent(), getIntentFilters(), getTechLists());
 
-					if (p2pMessage != null) {
-						nfcAdapter.enableForegroundNdefPush(getActivity(),
-								p2pMessage);
+					if (p2pMessage != null)
+					{
+						nfcAdapter.enableForegroundNdefPush(getActivity(), p2pMessage);
 					}
 
 				}
@@ -188,14 +249,17 @@ public class NfcPlugin extends Plugin {
 		});
 	}
 
-	private void stopNfc() {
-		getActivity().runOnUiThread(new Runnable() {
-			public void run() {
+	private void stopNfc()
+	{
+		getActivity().runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
 
-				NfcAdapter nfcAdapter = NfcAdapter
-						.getDefaultAdapter(getActivity());
+				NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
-				if (nfcAdapter != null) {
+				if (nfcAdapter != null)
+				{
 					nfcAdapter.disableForegroundDispatch(getActivity());
 					nfcAdapter.disableForegroundNdefPush(getActivity());
 				}
@@ -203,29 +267,34 @@ public class NfcPlugin extends Plugin {
 		});
 	}
 
-	private void startNdefPush() {
-		getActivity().runOnUiThread(new Runnable() {
-			public void run() {
+	private void startNdefPush()
+	{
+		getActivity().runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
 
-				NfcAdapter nfcAdapter = NfcAdapter
-						.getDefaultAdapter(getActivity());
+				NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
-				if (nfcAdapter != null) {
-					nfcAdapter.enableForegroundNdefPush(getActivity(),
-							p2pMessage);
+				if (nfcAdapter != null)
+				{
+					nfcAdapter.enableForegroundNdefPush(getActivity(), p2pMessage);
 				}
 			}
 		});
 	}
 
-	private void stopNdefPush() {
-		getActivity().runOnUiThread(new Runnable() {
-			public void run() {
+	private void stopNdefPush()
+	{
+		getActivity().runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
 
-				NfcAdapter nfcAdapter = NfcAdapter
-						.getDefaultAdapter(getActivity());
+				NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
-				if (nfcAdapter != null) {
+				if (nfcAdapter != null)
+				{
 					nfcAdapter.disableForegroundNdefPush(getActivity());
 				}
 
@@ -233,73 +302,81 @@ public class NfcPlugin extends Plugin {
 		});
 	}
 
-	private void addToTechList(String[] techs) {
+	private void addToTechList(String[] techs)
+	{
 		techLists.add(techs);
 	}
 
-	private IntentFilter createIntentFilter(String mimeType)
-			throws MalformedMimeTypeException {
-		IntentFilter intentFilter = new IntentFilter(
-				NfcAdapter.ACTION_NDEF_DISCOVERED);
+	private IntentFilter createIntentFilter(String mimeType) throws MalformedMimeTypeException
+	{
+		IntentFilter intentFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 		intentFilter.addDataType(mimeType);
 		return intentFilter;
 	}
 
-	private PendingIntent getPendingIntent() {
+	private PendingIntent getPendingIntent()
+	{
 		return pendingIntent;
 	}
 
-	private IntentFilter[] getIntentFilters() {
+	private IntentFilter[] getIntentFilters()
+	{
 		return intentFilters.toArray(new IntentFilter[intentFilters.size()]);
 	}
 
-	private String[][] getTechLists() {
+	private String[][] getTechLists()
+	{
 		// noinspection ToArrayCallWithZeroLengthArrayArgument
 		return techLists.toArray(new String[0][0]);
 	}
 
-	void parseMessage() {
+	void parseMessage()
+	{
 		Log.d(TAG, "parseMessage " + getIntent());
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		Log.d(TAG, "action " + action);
-		if (action == null) {
-			return;
-		}
+		if (action == null) { return; }
 
 		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-		Parcelable[] messages = intent
-				.getParcelableArrayExtra((NfcAdapter.EXTRA_NDEF_MESSAGES));
+		Parcelable[] messages = intent.getParcelableArrayExtra((NfcAdapter.EXTRA_NDEF_MESSAGES));
 
-		if (action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
+		if (action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED))
+		{
 			Ndef ndef = Ndef.get(tag);
 			fireNdefEvent(NDEF_MIME, ndef, messages);
 
-		} else if (action.equals(NfcAdapter.ACTION_TECH_DISCOVERED)) {
-			for (String tagTech : tag.getTechList()) {
+		}
+		else if (action.equals(NfcAdapter.ACTION_TECH_DISCOVERED))
+		{
+			for (String tagTech : tag.getTechList())
+			{
 				Log.d(TAG, tagTech);
-				if (tagTech.equals(NdefFormatable.class.getName())) {
+				if (tagTech.equals(NdefFormatable.class.getName()))
+				{
 					fireNdefEvent(NDEF_FORMATABLE, null, null);
-				} else if (tagTech.equals(Ndef.class.getName())) { //
+				}
+				else if (tagTech.equals(Ndef.class.getName()))
+				{ //
 					Ndef ndef = Ndef.get(tag);
 					fireNdefEvent(NDEF, ndef, messages);
 				}
 			}
 		}
 
-		if (action.equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+		if (action.equals(NfcAdapter.ACTION_TAG_DISCOVERED))
+		{
 			fireTagEvent(tag);
 		}
 
 		setIntent(new Intent());
 	}
 
-	private void fireNdefEvent(String type, Ndef ndef, Parcelable[] messages) {
+	private void fireNdefEvent(String type, Ndef ndef, Parcelable[] messages)
+	{
 
-		String javascriptTemplate = "var e = document.createEvent(''Events'');\n"
-				+ "e.initEvent(''{0}'');\n"
-				+ "e.tag = {1};\n"
-				+ "document.dispatchEvent(e);";
+		String javascriptTemplate = "var e = document.createEvent(''Events'');\n" + "e.initEvent(''{0}'');\n" + "e.tag = {1};\n"
+		      + "document.dispatchEvent(e);";
 
 		JSONObject jsonObject = buildNdefJSON(ndef, messages);
 		String tag = jsonObject.toString();
@@ -310,29 +387,31 @@ public class NfcPlugin extends Plugin {
 
 	}
 
-	private void fireTagEvent(Tag tag) {
-		String javascriptTemplate = "var e = document.createEvent(''Events'');\n"
-				+ "e.initEvent(''{0}'');\n"
-				+ "e.tag = {1};\n"
-				+ "document.dispatchEvent(e);";
+	private void fireTagEvent(Tag tag)
+	{
+		String javascriptTemplate = "var e = document.createEvent(''Events'');\n" + "e.initEvent(''{0}'');\n" + "e.tag = {1};\n"
+		      + "document.dispatchEvent(e);";
 
-		String command = MessageFormat.format(javascriptTemplate, TAG_DEFAULT,
-				Util.tagToJSON(tag));
+		String command = MessageFormat.format(javascriptTemplate, TAG_DEFAULT, Util.tagToJSON(tag));
 		Log.v(TAG, command);
 		this.sendJavascript(command);
 	}
 
-	JSONObject buildNdefJSON(Ndef ndef, Parcelable[] messages) {
+	JSONObject buildNdefJSON(Ndef ndef, Parcelable[] messages)
+	{
 
 		JSONObject json = Util.ndefToJSON(ndef);
 
 		// ndef is null for peer-to-peer
 		// ndef and messages are null for ndef format-able
-		if (ndef == null && messages != null) {
+		if (ndef == null && messages != null)
+		{
 
-			try {
+			try
+			{
 
-				if (messages.length > 0) {
+				if (messages.length > 0)
+				{
 					NdefMessage message = (NdefMessage) messages[0];
 					json.put("ndefMessage", Util.messageToJSON(message));
 					// guessing type, would prefer a more definitive way to
@@ -340,12 +419,14 @@ public class NfcPlugin extends Plugin {
 					json.put("type", "NDEF Push Protocol");
 				}
 
-				if (messages.length > 1) {
-					Log.wtf(TAG, "Expected one ndefMessage but found "
-							+ messages.length);
+				if (messages.length > 1)
+				{
+					Log.wtf(TAG, "Expected one ndefMessage but found " + messages.length);
 				}
 
-			} catch (JSONException e) {
+			}
+			catch (JSONException e)
+			{
 				// shouldn't happen
 				Log.e(Util.TAG, "Failed to convert ndefMessage into json", e);
 			}
@@ -353,40 +434,46 @@ public class NfcPlugin extends Plugin {
 		return json;
 	}
 
-	private void writeTag(NdefMessage message, Tag tag)
-			throws TagWriteException, IOException, FormatException {
+	private void writeTag(NdefMessage message, Tag tag) throws TagWriteException, IOException, FormatException
+	{
 
 		Ndef ndef = Ndef.get(tag);
-		if (ndef != null) {
+		if (ndef != null)
+		{
 			ndef.connect();
 
-			if (!ndef.isWritable()) {
-				throw new TagWriteException("Tag is read only");
-			}
+			if (!ndef.isWritable()) { throw new TagWriteException("Tag is read only"); }
 
 			int size = message.toByteArray().length;
-			if (ndef.getMaxSize() < size) {
-				String errorMessage = "Tag capacity is " + ndef.getMaxSize()
-						+ " bytes, message is " + size + " bytes.";
+			if (ndef.getMaxSize() < size)
+			{
+				String errorMessage = "Tag capacity is " + ndef.getMaxSize() + " bytes, message is " + size + " bytes.";
 				throw new TagWriteException(errorMessage);
 			}
 			ndef.writeNdefMessage(message);
-		} else {
+		}
+		else
+		{
 			NdefFormatable formatable = NdefFormatable.get(tag);
-			if (formatable != null) {
+			if (formatable != null)
+			{
 				formatable.connect();
 				formatable.format(message);
-			} else {
+			}
+			else
+			{
 				throw new TagWriteException("Tag doesn't support NDEF");
 			}
 		}
 	}
 
-	private boolean recycledIntent() { // TODO this is a kludge, find real
-										// solution
+	private boolean recycledIntent()
+	{ // TODO this is a kludge, find real
+	  // solution
 
 		int flags = getIntent().getFlags();
-		if ((flags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) {
+		if ((flags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
+		{
 			Log.i(TAG, "Launched from history, killing recycled intent");
 			setIntent(new Intent());
 			return true;
@@ -395,21 +482,24 @@ public class NfcPlugin extends Plugin {
 	}
 
 	@Override
-	public void onPause(boolean multitasking) {
+	public void onPause(boolean multitasking)
+	{
 		Log.d(TAG, "onPause " + getIntent());
 		super.onPause(multitasking);
 		stopNfc();
 	}
 
 	@Override
-	public void onResume(boolean multitasking) {
+	public void onResume(boolean multitasking)
+	{
 		Log.d(TAG, "onResume " + getIntent());
 		super.onResume(multitasking);
 		startNfc();
 	}
 
 	@Override
-	public void onNewIntent(Intent intent) {
+	public void onNewIntent(Intent intent)
+	{
 		Log.d(TAG, "onNewIntent " + intent);
 		super.onNewIntent(intent);
 		setIntent(intent);
@@ -417,15 +507,18 @@ public class NfcPlugin extends Plugin {
 		parseMessage();
 	}
 
-	private Activity getActivity() {
+	private Activity getActivity()
+	{
 		return this.cordova.getActivity();
 	}
 
-	private Intent getIntent() {
+	private Intent getIntent()
+	{
 		return getActivity().getIntent();
 	}
 
-	private void setIntent(Intent intent) {
+	private void setIntent(Intent intent)
+	{
 		getActivity().setIntent(intent);
 	}
 

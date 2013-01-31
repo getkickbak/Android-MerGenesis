@@ -42,18 +42,18 @@ Ext.define('Genesis.device.notification.PhoneGap',
 function initPushwoosh()
 {
    var pushNotification = window.plugins.pushNotification;
-   var callback = function(rc)
+   //var callback = function(rc)
    {
       // rc could be registrationId or errorCode
 
       // CHANGE projectid & appid
       pushNotification.registerDevice(
       {
-         projectid : 733275653511,
+         projectid : pushNotifProjectId,
          appid : pushNotifAppId
       }, function(status)
       {
-         var deviceToken = status;
+         var deviceToken = status, viewport;
          console.debug('registerDevice: ' + deviceToken);
          Genesis.constants.device =
          {
@@ -61,26 +61,9 @@ function initPushwoosh()
             'device_id' : deviceToken
          };
 
-         var mainPage = _application.getController('client' + '.MainPage'), viewport = _application.getController('client' + '.Viewport');
-         if (viewport.getLoggedIn() && !mainPage.updatedDeviceToken)
+         if (_application && (( viewport = _application.getController('client' + '.Viewport')) != null))
          {
-            Account['setUpdateRegUserDeviceUrl']();
-            console.log("setUpdateRegUserDeviceUrl - Refreshing Device Token ...");
-            Account.getProxy().supressErrorsPopup = true;
-            Account.load(0,
-            {
-               jsonData :
-               {
-               },
-               params :
-               {
-                  device : Ext.encode(Genesis.constants.device)
-               },
-               callback : function(record, operation)
-               {
-                  Account.getProxy().supressErrorsPopup = false;
-               }
-            });
+            viewport.fireEvent('updateDeviceToken');
          }
       }, function(status)
       {
@@ -92,18 +75,23 @@ function initPushwoosh()
       {
          if (event.notification)
          {
-            var title = event.notification.title;
-            var userData = event.notification.userdata;
+            var title = event.notification.title, userData = event.notification.userdata;
 
-            if ( typeof (userData) != "undefined")
+            console.debug('push notifcation - [' + JSON.stringify(event.notification) + ']');
+            //if ( typeof (userData) != "undefined")
             {
                Ext.device.Notification.show(
                {
-                  title : 'Push Notification Alert',
+                  title : 'KICKBAK Notification',
                   message : title,
-                  buttons : ['OK']
+                  buttons : ['View Details', 'Cancel'],
+                  callback : function(btn)
+                  {
+                     if (btn.toLowerCase() == 'view details')
+                     {
+                     }
+                  }
                });
-               console.warn('push notifcation - userData [' + JSON.stringify(userData) + ']');
             }
          }
          else
@@ -113,5 +101,5 @@ function initPushwoosh()
       });
    };
 
-   pushNotification.unregisterDevice(callback, callback);
+   //pushNotification.unregisterDevice(callback, callback);
 }

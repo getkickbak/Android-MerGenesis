@@ -1,34 +1,15 @@
 <html>
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-touch-fullscreen" content="yes" />
       <meta name="format-detection" content="telephone=no" />
       <meta name="format-detection" content="email=no" />
       <!-- Default Fontsize = 11px
-      iPad @132dpi = 100% - iPhone @163dpi = 114% - iPhone Retina @326dpi = 228%
       -->
-      <!-- iPad/iPhone specific css below, add after your main css >
-      <link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />
-      <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />
-      -->
-      <!--
-      <link rel="apple-touch-icon-precomposed" href="resouces/img/icon_57.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="resources/img/icon_72.png"/>
-      <link rel="apple-touch-icon-precomposed" sizes="114x114" href="resources/img/icon_114.png"/>
-      <link rel="apple-touch-startup-image" media="screen and (resolution: 326dpi)" href="resources/themes/images/v1/startup_640.png"
-      />
-      <link rel="apple-touch-startup-image" media="screen and (resolution: 163dpi)" href="resources/themes/images/v1/startup_640.png"
-      />
-      -->
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <title>MerKickBak</title>
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:360px) and (-webkit-max-device-pixel-ratio: 0.75)" href="resources/css/android-tablet-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (max-width:640px) and (-webkit-max-device-pixel-ratio: 1.0)" href="resources/css/android-tablet-mxhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:360px) and (-webkit-max-device-pixel-ratio: 1.5)" href="resources/css/android-tablet-lhdpi.css">
-      <link rel="stylesheet" type="text/css" media="only screen and (min-width:640px) and (-webkit-min-device-pixel-ratio: 2.0)" href="resources/css/android-tablet-mxhdpi.css">
+      <link rel="stylesheet" type="text/css" href="resources/css/android-tablet-lhdpi.css">
       <!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www
+      <link rel="stylesheet" type="text/css" href="resources/css/android-phone-lhdpi.css">
       <script src="http://192.168.0.52:8081/target/target-script-min.js#client"></script>       
       directory and include it here -->
       
@@ -162,19 +143,14 @@
             // add back button listener
             function onBackKeyDown(e)
             {
+               var viewport = _application.getController('server.Viewport');
+
                //e.preventDefault();
 
                //
                // Disable BackKey if something is in progress or application is not instantiated
                //
-               if (!_application || Ext.Viewport.getMasked())
-               {
-                  return;
-               }
-
-               var viewport = _application.getController('server.Viewport');
-
-               if (!viewport || viewport.popViewInProgress)
+               if (!_application || Ext.Viewport.getMasked() || !viewport || viewport.popViewInProgress)
                {
                   return;
                }
@@ -207,14 +183,14 @@
                      if ((backButton && !backButton.isHidden()) || //
                      (closeButton && !closeButton.isHidden()))
                      {
-                        Genesis.controller.ControllerBase.playSoundFile(viewport.sound_files['clickSound']);
+                        viewport.self.playSoundFile(viewport.sound_files['clickSound']);
                         viewport.popView();
                      }
                   }
                }
                else
                {
-                  Genesis.controller.ControllerBase.playSoundFile(viewport.sound_files['clickSound']);
+                  viewport.self.playSoundFile(viewport.sound_files['clickSound']);
                   navigator.app.exitApp();
                }
             }
@@ -233,7 +209,7 @@
             Ext.application(
             {
                profiles : ['Android'],
-               views : ['Document', 'server.Rewards', 'server.Redemptions', 'server.MerchantAccount', 'server.MainPage', 'widgets.server.RedeemItemDetail', 'server.SettingsPage', 'Viewport'],
+               views : ['Document', 'server.Rewards', 'server.Redemptions', 'server.MerchantAccount', 'server.MainPage', 'widgets.server.RedeemItemDetail', 'server.SettingsPage', 'server.TagCreatePage', 'Viewport'],
                controllers : ['server.Viewport', 'server.MainPage', 'server.Challenges', 'server.Rewards', 'server.Redemptions', 'server.Merchants', 'server.Settings', 'server.Prizes'],
                launch : function()
                {

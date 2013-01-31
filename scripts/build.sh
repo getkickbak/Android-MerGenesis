@@ -2,6 +2,7 @@
 
 appPath="/Users/eric/Documents/GetKickBak/V2.0.0/V2.0.0/public/javascripts/mobile";
 PROJECT_DIR="$1"
+NDK_ROOT="/Developer/SDKs/android-ndk-r8c"
 
 libPath="lib/sencha-touch-2.1.0-commercial";
 
@@ -29,3 +30,29 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/css/a*.css $PROJECT_DI
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.mp3 $PROJECT_DIR/www/resources/audio/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/audio/*.wav $PROJECT_DIR/www/resources/audio/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/themes/images/v1/android $PROJECT_DIR/www/resources/themes/images/v1
+
+
+# FourierTest/build.sh
+# Compiles fftw3 for Android
+# Make sure you have NDK_ROOT defined in .bashrc or .bash_profile
+ 
+INSTALL_DIR="$PROJECT_DIR/../jni/fftw3"
+SRC_DIR="$PROJECT_DIR/../../fftw-3.3.3"
+ 
+cd $SRC_DIR
+ 
+export PATH="$NDK_ROOT/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin/:$PATH"
+export SYS_ROOT="$NDK_ROOT/platforms/android-8/arch-arm/"
+export CC="arm-linux-androideabi-gcc --sysroot=$SYS_ROOT"
+export LD="arm-linux-androideabi-ld"
+export AR="arm-linux-androideabi-ar"
+export RANLIB="arm-linux-androideabi-ranlib"
+export STRIP="arm-linux-androideabi-strip"
+ 
+mkdir -p $INSTALL_DIR
+./configure --host=arm-eabi --build=i386-apple-darwin10.8.0 --prefix=$INSTALL_DIR LIBS="-lc -lgcc"
+ 
+make
+make install
+ 
+exit 0

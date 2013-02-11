@@ -31,6 +31,7 @@ public class Sender extends Communicator
 
 	public void preLoad()
 	{
+		int i;
 		double sampleRate = fs;
 		//
 		// Distribute frequencies to appropriate sections
@@ -41,11 +42,14 @@ public class Sender extends Communicator
 		do
 		{
 			stay = false;
-			for (int i = 0; i < freqs.length; i++)
+			for (i = 0; i < freqs.length - 1; i++)
 			{
 				freqs[i] = (int) (Math.random() * bw) + ((int) (i * bw)) + ((int) loFreq);
 			}
-			for (int i = 0; i < (freqs.length - 1); i++)
+			i = freqs.length - 1;
+			freqs[i] = (int) (Math.random() / 2 * bw) + ((int) (i * bw)) + ((int) loFreq);
+
+			for (i = 0; i < (freqs.length - 1); i++)
 			{
 				if ((freqs[i] + FREQ_GAP) > freqs[i + 1])
 				{
@@ -57,26 +61,29 @@ public class Sender extends Communicator
 
 		cleanup();
 		// audioBuf = WaveTools.wavread(inputPath, fs, this);
-		track = new AudioTrack(AudioManager.STREAM_RING, (int) fs, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
+		track = new AudioTrack(AudioManager.STREAM_MUSIC, (int) fs, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
 		      playMinSize, AudioTrack.MODE_STATIC);
 
-		short[] buffer = DTMF.genTone(freqs, sampleRate, numSamples);
-		int ret = track.setLoopPoints(0, numSamples, -1);
+		short[] buffer = DTMF.genTone(freqs, sampleRate, (int) sampleRate);
+		int ret = track.setLoopPoints(0, (int) sampleRate, -1);
 
 		// play an AudioTrack in loop
 		if (ret != AudioTrack.SUCCESS)
 		{
 			Log.i(TAG, "Cannot Loop Tone Generator");
 		}
-		track.write(buffer, 0, numSamples); // write data to audio hardware
-		track.setStereoVolume(AudioTrack.getMaxVolume(), AudioTrack.getMaxVolume());
+		printMatchingValues(freqs);
+
+		track.write(buffer, 0, (int) sampleRate); // write data to audio hardware
+		track.setStereoVolume((AudioTrack.getMaxVolume() - AudioTrack.getMinVolume()) / 2,
+		      (AudioTrack.getMaxVolume() - AudioTrack.getMinVolume()) / 2);
 	}
 
 	public Integer[] process()
 	{
 		track.play();
 		Log.i(TAG, "Generating Tones ...");
-		
+
 		return freqs;
 	}
 
@@ -117,5 +124,19 @@ public class Sender extends Communicator
 			track = null;
 			Log.i(TAG, "Stopped AudioTrack playback ...");
 		}
+	}
+
+	private void printMatchingValues(Integer[] freqs)
+	{
+		String pitch = new String("");
+		for (int i = 0; i < freqs.length; i++)
+		{
+			pitch += " " + Integer.toString(freqs[i]);
+			if (i < freqs.length - 1)
+			{
+				pitch += ",";
+			}
+		}
+		Log.i(TAG, "Creating Tones at Freq ..." + pitch);
 	}
 }

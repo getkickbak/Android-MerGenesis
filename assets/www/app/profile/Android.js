@@ -75,9 +75,9 @@ function initPushwoosh()
       {
          if (event.notification)
          {
-            var title = event.notification.title, userData = event.notification.userdata;
+            var notification = event.notification, title = notification.title, userData = notification.userdata, viewport = _application.getController('client' + '.Viewport');
 
-            console.debug('push notifcation - [' + JSON.stringify(event.notification) + ']');
+            console.debug('push notifcation - [' + JSON.stringify(notification) + ']');
             //if ( typeof (userData) != "undefined")
             {
                Ext.device.Notification.show(
@@ -89,6 +89,8 @@ function initPushwoosh()
                   {
                      if (btn.toLowerCase() == 'view details')
                      {
+                        viewport.setApsPayload(userData)
+                        viewport.getGeoLocation();
                      }
                   }
                });

@@ -74,12 +74,11 @@ public class FastFT
 		fft.forward(audioBuffer);
 		float[] imag = fft.getImaginaryPart();
 		float[] real = fft.getRealPart();
-		float fstart = startFreq / (sampleRate / audioBuffer.length);
-		float fend = endFreq / (sampleRate / audioBuffer.length);
+		float fstart = startFreq;
+		float fend = (endFreq - ((endFreq - startFreq) / matchCount / 2));
 
-		BigDecimal start = new BigDecimal(fstart).setScale(0, RoundingMode.HALF_UP);
-		BigDecimal end = new BigDecimal(fend).setScale(0, RoundingMode.HALF_UP);
-		// Log.i("FastFT", "buffer.length=" + buffer.length + ", complex.length=" + real.length);
+		BigDecimal start = new BigDecimal(fstart / (sampleRate / audioBuffer.length)).setScale(0, RoundingMode.HALF_UP);
+		BigDecimal end = new BigDecimal(fend / (sampleRate / audioBuffer.length)).setScale(0, RoundingMode.HALF_UP);
 		for (int index = (start.intValue() - 1); index < (end.intValue() + 1); index++)
 		{
 			int mag = (int) Math.abs((Math.sqrt((real[index] * real[index]) + (imag[index] * imag[index]))));
@@ -122,13 +121,11 @@ public class FastFT
 					{
 						tmp[0] = mag;
 						tmp[1] = index;
-						// Log.i("FastFT", "Update Index Freq Found= " + index * (sampleRate / buffer.length) + "Hz, Magitutde= " + mag);
 					}
 				}
 				else
 				{
 					maxMag.add(new Integer[] { mag, index });
-					// Log.i("FastFT", "Add to Index Freq Found= " + index * (sampleRate / buffer.length) + "Hz, Magitutde= " + mag);
 				}
 			}
 		}
@@ -151,25 +148,36 @@ public class FastFT
 				freq = maxMag.get(i)[1] * (sampleRate / audioBuffer.length);
 				BigDecimal d = new BigDecimal(freq).setScale(0, RoundingMode.HALF_UP);
 				ret[i] = d.intValue();
+
+				Log.i("FastFT", "PostFFT - Mag Resolution= " + maxMag.get(i)[0] + ", Freq = " + ret[i] + "Hz");
 			}
 			//
 			// Sort on Frequency (asc)
 			//
 			Arrays.sort(ret);
-			String pitch = new String("");
-			for (int i = 0; i < ret.length; i++)
-			{
-				pitch += " " + Integer.toString(ret[i]);
-				if (i < ret.length - 1)
-				{
-					pitch += ",";
-				}
-			}
-			// Log.i("FastFT", "PostFFT - Freq Resolution= " + (sampleRate / buffer.length) + "Hz, Pitch=" + pitch + "Hz");
+
+			//
+			// Print Matching info
+			//
+			// printMatchingValues(ret, audioBuffer);
 
 			return ret;
 		}
 
 		return null;
+	}
+
+	private void printMatchingValues(Integer[] ret, float[] audioBuffer)
+	{
+		String pitch = new String("");
+		for (int i = 0; i < ret.length; i++)
+		{
+			pitch += " " + Integer.toString(ret[i]);
+			if (i < ret.length - 1)
+			{
+				pitch += ",";
+			}
+		}
+		Log.i("FastFT", "PostFFT - Freq Resolution= " + (sampleRate / audioBuffer.length) + "Hz, Pitch=" + pitch + "Hz");
 	}
 }

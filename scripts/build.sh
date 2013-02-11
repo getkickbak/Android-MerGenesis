@@ -49,10 +49,10 @@ export AR="arm-linux-androideabi-ar"
 export RANLIB="arm-linux-androideabi-ranlib"
 export STRIP="arm-linux-androideabi-strip"
  
-mkdir -p $INSTALL_DIR
-./configure --host=arm-eabi --build=i386-apple-darwin10.8.0 --prefix=$INSTALL_DIR LIBS="-lc -lgcc"
+#mkdir -p $INSTALL_DIR
+#./configure --host=arm-eabi --build=i386-apple-darwin10.8.0 --prefix=$INSTALL_DIR LIBS="-lc -lgcc"
  
-make
-make install
+#make
+#make install
  
-exit 0
+#exit 0

@@ -16,6 +16,9 @@ import org.json.JSONException;
 import android.media.AudioManager;
 
 import android.content.Context;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -26,24 +29,44 @@ import org.json.JSONObject;
  */
 public class ProximityIDPlugin extends CordovaPlugin
 {
-	public static final int     ILLEGAL_ACCESS_ERROR = 1;
-	public double               SEND_VOL_RATIO;
-	public double               RECV_VOL_RATIO;
+	public static final int             ILLEGAL_ACCESS_ERROR = 1;
+	public double                       SEND_VOL_RATIO;
+	public double                       RECV_VOL_RATIO;
 
-	private static final String TAG                  = "ProximityID";
-	private static final String INIT                 = "init";
-	private static final String PRELOAD              = "preLoadIdentity";
-	private static final String SEND                 = "sendIdentity";
-	private static final String SCAN                 = "scanIdentity";
-	private static final String STOP                 = "stop";
-	private static final String VOLUME               = "setVolume";
+	private static final String         TAG                  = "ProximityID";
+	private static final String         INIT                 = "init";
+	private static final String         PRELOAD              = "preLoadIdentity";
+	private static final String         SEND                 = "sendIdentity";
+	private static final String         SCAN                 = "scanIdentity";
+	private static final String         STOP                 = "stop";
+	private static final String         VOLUME               = "setVolume";
 
-	private boolean             merchantDevice       = true;
-	private boolean             isSender;
-	private int                 s_vol                = -1;
-	private Communicator        comm;
-	private CommunicatorTask    task;
-	private AudioManager        audioMan;
+	private boolean                     merchantDevice       = true;
+	private boolean                     isSender;
+	private int                         s_vol                = -1;
+	private Communicator                comm;
+	private CommunicatorTask            task;
+	private AudioManager                audioMan;
+	private AudioStreamRedirectReceiver streamRedirectReceiver;
+
+	private class AudioStreamRedirectReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())
+			      || Intent.ACTION_HEADSET_PLUG.equals(intent.getAction()))
+			{
+				audioMan.setMode(AudioManager.MODE_IN_CALL);
+				audioMan.setMode(AudioManager.MODE_NORMAL);
+				audioMan.setBluetoothScoOn(false);
+				audioMan.setSpeakerphoneOn(true);
+				Log.i(TAG, "Redirect Audio to Speakers ...");
+			}
+		}
+	}
+
+	private IntentFilter intentFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
 
 	/**
 	 * 
@@ -54,6 +77,10 @@ public class ProximityIDPlugin extends CordovaPlugin
 
 	public void onDestroy()
 	{
+		if (streamRedirectReceiver != null)
+		{
+			this.cordova.getActivity().unregisterReceiver(streamRedirectReceiver);
+		}
 		stop();
 	}
 
@@ -213,9 +240,12 @@ public class ProximityIDPlugin extends CordovaPlugin
 	private void init()
 	{
 		audioMan = (AudioManager) cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
+		audioMan.setMode(AudioManager.MODE_IN_CALL);
+		audioMan.setMode(AudioManager.MODE_NORMAL);
 		audioMan.setBluetoothScoOn(false);
 		audioMan.setSpeakerphoneOn(true);
-		audioMan.setMode(AudioManager.MODE_CURRENT);
+		streamRedirectReceiver = new AudioStreamRedirectReceiver();
+		this.cordova.getActivity().registerReceiver(streamRedirectReceiver, intentFilter);
 	}
 
 	/**
@@ -294,9 +324,9 @@ public class ProximityIDPlugin extends CordovaPlugin
 		}
 		else if (task == null)
 		{
-			s_vol = audioMan.getStreamVolume(AudioManager.STREAM_MUSIC);
-			int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) * SEND_VOL_RATIO);
-			audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
+			s_vol = audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+			int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION) * SEND_VOL_RATIO);
+			audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, vol, 0);
 			Log.i(TAG, "Setting Volume to [" + vol + "]");
 			task = new CommunicatorTask(comm, callbackContext);
 			task.execute();
@@ -316,10 +346,10 @@ public class ProximityIDPlugin extends CordovaPlugin
 		}
 		else if (task == null)
 		{
-			//s_vol = audioMan.getStreamVolume(AudioManager.STREAM_MUSIC);
-			//int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC) * RECV_VOL_RATIO);
-			//audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-			//Log.i(TAG, "Setting Volume to [" + vol + "]");
+			// s_vol = audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+			// int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION) * RECV_VOL_RATIO);
+			// audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, vol, 0);
+			// Log.i(TAG, "Setting Volume to [" + vol + "]");
 			s_vol = -1;
 			comm = new Receiver(audioMan, samples, missedThreshold, magThreshold, overlapRatio);
 			task = new CommunicatorTask(comm, callbackContext);
@@ -342,9 +372,9 @@ public class ProximityIDPlugin extends CordovaPlugin
 			//
 			if ((merchantDevice != true) && (s_vol >= 0))
 			{
-				if (audioMan.getStreamVolume(AudioManager.STREAM_MUSIC) != s_vol)
+				if (audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION) != s_vol)
 				{
-					audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, s_vol, 0);
+					audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, s_vol, 0);
 					Log.i(TAG, "Setting Volume Back to [" + s_vol + "]");
 				}
 			}
@@ -359,11 +389,11 @@ public class ProximityIDPlugin extends CordovaPlugin
 
 	private void setVolume(Integer v)
 	{
-		double volume = (v / 100.0) * audioMan.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		double volume = (v / 100.0) * audioMan.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
 		BigDecimal d = new BigDecimal(volume).setScale(0, RoundingMode.HALF_UP);
-		if (audioMan.getStreamVolume(AudioManager.STREAM_MUSIC) != d.intValue())
+		if (audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION) != d.intValue())
 		{
-			audioMan.setStreamVolume(AudioManager.STREAM_MUSIC, d.intValue(), 0);
+			audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, d.intValue(), 0);
 			Log.i(TAG, "Setting Volume to [" + d.intValue() + "]");
 		}
 	}

@@ -1,5 +1,8 @@
 package com.getkickbak.merkickbak;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.CookieManager;
 // import android.app.Activity;
@@ -8,7 +11,7 @@ import org.apache.cordova.*;
 
 public class MerKICKBAK extends DroidGap
 {
-
+	static public Boolean singleTask = false;
 	/*********************************************************
 	 * SSCL Native Function
 	 *********************************************************/
@@ -19,7 +22,6 @@ public class MerKICKBAK extends DroidGap
 		// System.loadLibrary("sscl");
 	}
 
-	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -27,11 +29,12 @@ public class MerKICKBAK extends DroidGap
 		super.setIntegerProperty("loadUrlTimeoutValue", 60000);
 		super.setIntegerProperty("splashscreen", R.drawable.splash);
 		super.loadUrl("file:///android_asset/www/index.html", 10000);
-		appView.getSettings().setGeolocationDatabasePath("/data/data/"+this.getPackageName()+"/");
+		appView.getSettings().setGeolocationDatabasePath("/data/data/" + this.getPackageName() + "/");
 		try
 		{
 			CookieManager.getInstance().setAcceptCookie(true);
 			// CookieManager.setAcceptFileSchemeCookies(true);
+			singleTask = true;
 		}
 		catch (Throwable e)
 		{}

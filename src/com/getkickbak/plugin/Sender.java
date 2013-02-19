@@ -61,8 +61,8 @@ public class Sender extends Communicator
 
 		cleanup();
 		// audioBuf = WaveTools.wavread(inputPath, fs, this);
-		track = new AudioTrack(AudioManager.STREAM_MUSIC, (int) fs, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
-		      playMinSize, AudioTrack.MODE_STATIC);
+		track = new AudioTrack(AudioManager.STREAM_NOTIFICATION, (int) fs, AudioFormat.CHANNEL_OUT_MONO,
+		      AudioFormat.ENCODING_PCM_16BIT, playMinSize, AudioTrack.MODE_STATIC);
 
 		short[] buffer = DTMF.genTone(freqs, sampleRate, (int) sampleRate);
 		int ret = track.setLoopPoints(0, (int) sampleRate, -1);
@@ -75,8 +75,7 @@ public class Sender extends Communicator
 		printMatchingValues(freqs);
 
 		track.write(buffer, 0, (int) sampleRate); // write data to audio hardware
-		track.setStereoVolume((AudioTrack.getMaxVolume() - AudioTrack.getMinVolume()) / 2,
-		      (AudioTrack.getMaxVolume() - AudioTrack.getMinVolume()) / 2);
+		track.setStereoVolume(AudioTrack.getMaxVolume() / 5, AudioTrack.getMaxVolume() / 5);
 	}
 
 	public Integer[] process()

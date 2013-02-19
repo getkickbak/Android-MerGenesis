@@ -2,11 +2,16 @@ package com.getkickbak.plugin;
 
 import java.util.Arrays;
 
+import android.os.Build;
+import android.annotation.TargetApi;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.MediaSyncEvent;
 import android.util.Log;
+
+import android.media.audiofx.*;
 
 public class Receiver extends Communicator
 {
@@ -30,6 +35,7 @@ public class Receiver extends Communicator
 	                                                  AudioFormat.ENCODING_PCM_16BIT) * 32;
 
 	private AudioRecord        audioInput       = null;
+	private static Equalizer   equalizer        = null;
 	//
 	// AudioData buffer used for FFT
 	//
@@ -127,6 +133,80 @@ public class Receiver extends Communicator
 		// Log.i(TAG, "Retrieved Sound Data ... samplesToRead=" + samplesToRead + ", offset=" + offset);
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void createEqualizer16()
+	{
+		if (equalizer != null)
+		{
+			removeEqualizer16();
+		}
+		Log.i(TAG, "Enabling Equalizer for AudioSessionId(" + audioInput.getAudioSessionId() + ") ...");
+		equalizer = new Equalizer(0, audioInput.getAudioSessionId());
+		loadEqualizer();
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void removeEqualizer16()
+	{
+		if (equalizer != null)
+		{
+			equalizer.setEnabled(false);
+			Log.i(TAG, "Disabled Equalizer");
+			try
+			{
+				equalizer.release();
+			}
+			catch (Exception e)
+			{}
+			Log.i(TAG, "Released Equalizer");
+			equalizer = null;
+		}
+	}
+
+	private void createEqualizer()
+	{
+		if (equalizer != null)
+		{
+			removeEqualizer();
+		}
+		else
+		{
+			Log.i(TAG, "Enabling Equalizer for AudioSessionId(" + 0 + ") ...");
+			equalizer = new Equalizer(0, 0);
+			loadEqualizer();
+		}
+	}
+
+	private void removeEqualizer()
+	{
+	}
+
+	private void loadEqualizer()
+	{
+		short startBand = equalizer.getBand((int) loFreq);
+		short endBand = equalizer.getBand((int) hiFreq);
+		for (short i = startBand; i <= endBand; i++)
+		{
+			equalizer.setBandLevel(i, equalizer.getBandLevelRange()[1]);
+		}
+		equalizer.setEnabled(true);
+		Log.i(TAG,
+		      "Maximum Gain set for KICKBAK Frequencies [" + startBand + " to " + endBand + ", Gain("
+		            + equalizer.getBandLevelRange()[1] + ")]");
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void startRecording16()
+	{
+		MediaSyncEvent event = MediaSyncEvent.createEvent(MediaSyncEvent.SYNC_EVENT_NONE);
+		audioInput.startRecording(event);
+	}
+
+	private void startRecording()
+	{
+		audioInput.startRecording();
+	}
+
 	public void preLoad()
 	{
 	}
@@ -137,13 +217,23 @@ public class Receiver extends Communicator
 		int conseqMissedCounts = 0, sleepCount = 0;
 
 		Log.i(TAG, "Receiving AudioInput ...");
-		Log.i(TAG, "Sample Length= " + N + ", recMinSize= " + recMinSize);
+		// Log.i(TAG, "Sample Length= " + N + ", recMinSize= " + recMinSize);
 		try
 		{
 			// construct AudioRecord to record audio from microphone with sample rate of 44100Hz
 			audioInput = new AudioRecord(MediaRecorder.AudioSource.MIC, (int) fs, AudioFormat.CHANNEL_IN_MONO,
 			      AudioFormat.ENCODING_PCM_16BIT, recMinSize);
-			audioInput.startRecording();
+
+			createEqualizer();
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+			{
+				startRecording();
+			}
+			else
+			{
+				startRecording16();
+			}
+
 			do
 			{
 				synchronized (this)

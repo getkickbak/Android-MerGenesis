@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.os.Build;
 
 import org.json.JSONObject;
 
@@ -325,9 +326,17 @@ public class ProximityIDPlugin extends CordovaPlugin
 		else if (task == null)
 		{
 			s_vol = audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-			int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION) * SEND_VOL_RATIO);
-			audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, vol, 0);
-			Log.i(TAG, "Setting Volume to [" + vol + "]");
+			//
+			// High Frequency volume problem in Android <4.2.2
+			//
+			if (Build.VERSION.RELEASE.equalsIgnoreCase("4.2") || Build.VERSION.RELEASE.equalsIgnoreCase("4.2.1"))
+			{
+				setVolume((int) (0.5 * SEND_VOL_RATIO * 100));
+			}
+			else
+			{
+				setVolume((int) (SEND_VOL_RATIO * 100));
+			}
 			task = new CommunicatorTask(comm, callbackContext);
 			task.execute();
 		}
@@ -347,9 +356,7 @@ public class ProximityIDPlugin extends CordovaPlugin
 		else if (task == null)
 		{
 			// s_vol = audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-			// int vol = (int) (audioMan.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION) * RECV_VOL_RATIO);
-			// audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, vol, 0);
-			// Log.i(TAG, "Setting Volume to [" + vol + "]");
+			// setVolume((int) (RECV_VOL_RATIO * 100));
 			s_vol = -1;
 			comm = new Receiver(audioMan, samples, missedThreshold, magThreshold, overlapRatio);
 			task = new CommunicatorTask(comm, callbackContext);
@@ -391,10 +398,11 @@ public class ProximityIDPlugin extends CordovaPlugin
 	{
 		double volume = (v / 100.0) * audioMan.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
 		BigDecimal d = new BigDecimal(volume).setScale(0, RoundingMode.HALF_UP);
+		Log.i(TAG, "Setting Current Volume to [" + d.intValue() + "]");
 		if (audioMan.getStreamVolume(AudioManager.STREAM_NOTIFICATION) != d.intValue())
 		{
 			audioMan.setStreamVolume(AudioManager.STREAM_NOTIFICATION, d.intValue(), 0);
-			Log.i(TAG, "Setting Volume to [" + d.intValue() + "]");
+			Log.i(TAG, "Current Volume is set to [" + d.intValue() + "]");
 		}
 	}
 }

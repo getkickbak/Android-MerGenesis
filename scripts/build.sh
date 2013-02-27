@@ -1,10 +1,10 @@
 #!/bin/bash
 
-appPath="/Users/eric/Documents/GetKickBak/V2.0.0/V2.0.0/public/javascripts/mobile";
+appPath="/Users/eric/Documents/GetKickBak/V2.1.0/V2.1.0/public/javascripts/mobile";
 PROJECT_DIR="$1"
 NDK_ROOT="/Developer/SDKs/android-ndk-r8c"
 
-libPath="lib/sencha-touch-2.1.0-commercial";
+libPath="lib/touch-2.1.1";
 
 touch -cm ${PROJECT_DIR}/www
 mkdir -p $PROJECT_DIR/www/app/store

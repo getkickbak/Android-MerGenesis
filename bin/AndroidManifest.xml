@@ -90,15 +90,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
-                <!-- -->
                 <action android:name="android.intent.action.MAIN" />
+                <!--
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.MONKEY"/>
-                <!-- -->
-                <!--
-                <category android:name="android.intent.category.LAUNCHER" />
                  -->
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -143,6 +141,7 @@
             </intent-filter>
         </activity>
 
+        <!-- 
         <receiver
             android:name=".BootUpReceiver"
             android:enabled="true"
@@ -153,6 +152,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+         -->
     </application>
 
 </manifest>

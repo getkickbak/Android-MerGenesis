@@ -84,16 +84,10 @@ function initPushwoosh()
                {
                   title : 'KICKBAK Notification',
                   message : title,
-                  buttons : ['View Details', 'Cancel'],
-                  callback : function(btn)
-                  {
-                     if (btn.toLowerCase() == 'view details')
-                     {
-                        viewport.setApsPayload(userData)
-                        viewport.getGeoLocation();
-                     }
-                  }
+                  buttons : ['Dismiss']
                });
+               viewport.setApsPayload(userData)
+               viewport.getGeoLocation();
             }
          }
          else

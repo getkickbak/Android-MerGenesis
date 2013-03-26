@@ -1,7 +1,11 @@
 package com.chariotsolutions.nfc.plugin;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
@@ -235,13 +239,20 @@ public class NfcPlugin extends Plugin
 			{
 				NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
-				if (nfcAdapter != null)
+				if ((nfcAdapter != null) && (!isApplicationBroughtToBackground()))
 				{
-					nfcAdapter.enableForegroundDispatch(getActivity(), getPendingIntent(), getIntentFilters(), getTechLists());
-
-					if (p2pMessage != null)
+					try
 					{
-						nfcAdapter.enableForegroundNdefPush(getActivity(), p2pMessage);
+						nfcAdapter.enableForegroundDispatch(getActivity(), getPendingIntent(), getIntentFilters(), getTechLists());
+
+						if (p2pMessage != null)
+						{
+							nfcAdapter.enableForegroundNdefPush(getActivity(), p2pMessage);
+						}
+					}
+					catch (Throwable e)
+					{
+
 					}
 
 				}
@@ -495,6 +506,18 @@ public class NfcPlugin extends Plugin
 		Log.d(TAG, "onResume " + getIntent());
 		super.onResume(multitasking);
 		startNfc();
+	}
+
+	private boolean isApplicationBroughtToBackground()
+	{
+		ActivityManager am = (ActivityManager) cordova.getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
+		if (!tasks.isEmpty())
+		{
+			ComponentName topActivity = tasks.get(0).topActivity;
+			if (!topActivity.getPackageName().equals(cordova.getActivity().getPackageName())) { return true; }
+		}
+		return false;
 	}
 
 	@Override

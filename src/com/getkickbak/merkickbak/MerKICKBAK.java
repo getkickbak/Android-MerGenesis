@@ -1,10 +1,12 @@
 package com.getkickbak.merkickbak;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.webkit.CookieManager;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 // import android.app.Activity;
 import android.view.Menu;
 import org.apache.cordova.*;
@@ -24,12 +26,45 @@ public class MerKICKBAK extends DroidGap
 
 	public void onCreate(Bundle savedInstanceState)
 	{
+		try {
 		super.onCreate(savedInstanceState);
+
 		// setContentView(R.layout.activity_kick_bak);
 		super.setIntegerProperty("loadUrlTimeoutValue", 60000);
 		super.setIntegerProperty("splashscreen", R.drawable.splash);
 		super.loadUrl("file:///android_asset/www/index.html", 10000);
 		appView.getSettings().setGeolocationDatabasePath("/data/data/" + this.getPackageName() + "/");
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		Display display = getWindowManager().getDefaultDisplay();
+
+		display.getMetrics(metrics);
+		float density = metrics.density;
+		float width = metrics.widthPixels / density;
+		Log.i("MerKICKBAK", "Display Width " + width + "px");
+
+		int orientation = getResources().getConfiguration().orientation;
+		switch (orientation)
+		{
+			case Configuration.ORIENTATION_LANDSCAPE:
+			{
+				this.getActivity().setRequestedOrientation(
+				      (width > 1024.0) ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				break;
+			}
+			case Configuration.ORIENTATION_PORTRAIT:
+			default:
+			{
+				this.getActivity().setRequestedOrientation(
+				      (width > 640.0) ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				break;
+			}
+		}
+		}
+		catch(Throwable e)
+		{
+			
+		}
 		try
 		{
 			CookieManager.getInstance().setAcceptCookie(true);

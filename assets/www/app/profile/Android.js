@@ -75,15 +75,15 @@ function initPushwoosh()
       // CHANGE projectid & appid
       pushNotification.registerDevice(
       {
-         projectid : pushNotifProjectId,
-         appid : pushNotifAppId
+         projectid : Genesis.constants.pushNotifProjectId,
+         appid : Genesis.constants.pushNotifAppId
       }, function(status)
       {
          var deviceToken = status, viewport;
          console.debug('registerDevice: ' + deviceToken);
          Genesis.constants.device =
          {
-            'device_type' : pushNotifType, //1 for iOS, 3 for Android
+            'device_type' : Genesis.constants.pushNotifType, //1 for iOS, 3 for Android
             'device_id' : deviceToken
          };
 

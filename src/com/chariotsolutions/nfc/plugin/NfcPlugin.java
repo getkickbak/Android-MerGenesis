@@ -251,9 +251,7 @@ public class NfcPlugin extends Plugin
 						}
 					}
 					catch (Throwable e)
-					{
-
-					}
+					{}
 
 				}
 			}
@@ -269,10 +267,16 @@ public class NfcPlugin extends Plugin
 
 				NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
-				if (nfcAdapter != null)
+				if ((nfcAdapter != null) && (!isApplicationBroughtToBackground()))
 				{
-					nfcAdapter.disableForegroundDispatch(getActivity());
-					nfcAdapter.disableForegroundNdefPush(getActivity());
+					try
+					{
+						nfcAdapter.disableForegroundDispatch(getActivity());
+						nfcAdapter.disableForegroundNdefPush(getActivity());
+					}
+					catch (Throwable e)
+					{}
+
 				}
 			}
 		});

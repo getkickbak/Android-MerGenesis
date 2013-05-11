@@ -4,7 +4,7 @@ appPath="/Users/eric/Documents/GetKickBak/V2.1.0/V2.1.0/public/javascripts/mobil
 PROJECT_DIR="$1"
 NDK_ROOT="/Developer/SDKs/android-ndk-r8c"
 
-libPath="lib/touch-2.1.1";
+libPath="../lib/touch-2.1.1";
 
 touch -cm ${PROJECT_DIR}/www
 mkdir -p $PROJECT_DIR/www/app/store
@@ -20,7 +20,7 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/server-all.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/core.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/index_android_server.html $PROJECT_DIR/www/index.html
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/*.android.js $PROJECT_DIR/www/lib/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/*min.js $PROJECT_DIR/www/lib/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/../lib/*min.js $PROJECT_DIR/www/lib/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*nfc*.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*.android.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/sencha-touch-all.js $PROJECT_DIR/www/lib/

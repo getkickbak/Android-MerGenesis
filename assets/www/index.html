@@ -25,6 +25,7 @@
       
       <script type="text/javascript" src="lib/gibberish-aes.min.js"></script>
       <script type="text/javascript" src="lib/cordova-2.6.0.android.js"></script>
+      <script type="text/javascript" src="lib/core/websocket.js"></script>
       <script type="text/javascript" charset="utf-8" src="lib/core/phonegap-nfc.js"></script>
 
       <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
@@ -96,6 +97,7 @@
                   Ext.device.Connection.__proto__.$className + ", " + //
                   "devicePixelRatio - " + window.devicePixelRatio + ", " + //
                   'Connection type: [' + Ext.device.Connection.getType() + ']');
+                  posConnect();
                }
             }, false);
 
@@ -104,19 +106,25 @@
                if (Ext.device)
                {
                   console.log("Phone is Offline");
+                  posDisconnect();
                }
             }, false);
             document.addEventListener("pause", function()
             {
-               console.log("App is Paused");
+               if (Ext.device)
+               {
+                  console.log("App is Paused");
+                  posDisconnect();
+               }
             }, false);
 
             document.addEventListener("resume", function()
             {
                if (Ext.device)
                {
+                  console.log("App is Resumed");
+                  posConnect();
                }
-               console.log("App is Resumed");
             }, false);
             window.addEventListener("batterylow", function(info)
             {
@@ -149,6 +157,7 @@
             document.addEventListener("deviceready", function()
             {
                navigator.splashscreen.show();
+               
                console.debug = console.debug || console.log;
                console.warn = console.warn || console.debug;
 
@@ -156,61 +165,6 @@
                launched = 0x10;
                _appLaunch();
             }, false);
-
-            // add back button listener
-            function onBackKeyDown(e)
-            {
-               var viewport = _application.getController('server.Viewport');
-
-               //e.preventDefault();
-
-               //
-               // Disable BackKey if something is in progress or application is not instantiated
-               //
-               if (!_application || Ext.Viewport.getMasked() || !viewport || viewport.popViewInProgress)
-               {
-                  return;
-               }
-
-               console.log("BackButton Pressed");
-               
-               if (Ext.device.Notification.msg && !Ext.device.Notification.msg.isHidden())
-               {
-                  Ext.device.Notification.dismiss();
-                  return;
-               }
-               
-               var vport = viewport.getViewport();
-               var activeItem = (vport) ? vport.getActiveItem() : null;
-               if (activeItem)
-               {
-                  var success = false;
-                  for (var i = 0; i < backBtnCallbackListFn.length; i++)
-                  {
-                     success = backBtnCallbackListFn[i](activeItem);
-                     if (success)
-                     {
-                        break;
-                     }
-                  }
-                  if (!success)
-                  {
-                     var backButton = activeItem.query('button[tag=back]')[0];
-                     var closeButton = activeItem.query('button[tag=close]')[0];
-                     if ((backButton && !backButton.isHidden()) || //
-                     (closeButton && !closeButton.isHidden()))
-                     {
-                        viewport.self.playSoundFile(viewport.sound_files['clickSound']);
-                        viewport.popView();
-                     }
-                  }
-               }
-               else
-               {
-                  viewport.self.playSoundFile(viewport.sound_files['clickSound']);
-                  navigator.app.exitApp();
-               }
-            }
             
             Ext.Loader.setConfig(
             {

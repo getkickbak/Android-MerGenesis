@@ -8,249 +8,169 @@
 package com.getkickbak.merkickbak;
 
 public final class R {
-    public static final class attr {
+    public static final class array {
+        /**  Used in view/Split Touch View example 
+         */
+        public static final int cheese_responses=0x7f05000c;
+        /**  Used in content/ClipboardSample.java 
+         */
+        public static final int clip_data_types=0x7f050002;
+        /**  Used in View/Spinner1.java 
+         */
+        public static final int colors=0x7f050000;
+        /**  Used in app/menu examples 
+         */
+        public static final int entries_list_preference=0x7f050007;
+        /**  Used in app/menu examples 
+         */
+        public static final int entryvalues_list_preference=0x7f050008;
+        /**  Used in app/Sample Device Admin 
+         */
+        public static final int password_qualities=0x7f050009;
+        /**  Used in View/Spinner1.java 
+         */
+        public static final int planets=0x7f050001;
+        /**  Used in app/Screen Orientation 
+         */
+        public static final int screen_orientations=0x7f05000a;
+        /**  Used in App/SearchInvoke.java 
+         */
+        public static final int search_menuModes=0x7f050003;
+        /**  Used in view/Secure View examples 
+         */
+        public static final int secure_view_clicked=0x7f05000b;
+        /**  Used in app/dialog examples 
+         */
+        public static final int select_dialog_items=0x7f050004;
+        public static final int select_dialog_items2=0x7f050005;
+        public static final int select_dialog_items3=0x7f050006;
     }
-    public static final class color {
-        public static final int contents_text=0x7f060000;
-        public static final int encode_view=0x7f060001;
-        public static final int help_button_view=0x7f060002;
-        public static final int help_view=0x7f060003;
-        public static final int possible_result_points=0x7f060004;
-        public static final int result_image_border=0x7f060005;
-        public static final int result_minor_text=0x7f060006;
-        public static final int result_points=0x7f060007;
-        public static final int result_text=0x7f060008;
-        public static final int result_view=0x7f060009;
-        public static final int sbc_header_text=0x7f06000a;
-        public static final int sbc_header_view=0x7f06000b;
-        public static final int sbc_layout_view=0x7f06000d;
-        public static final int sbc_list_item=0x7f06000c;
-        public static final int sbc_page_number_text=0x7f06000e;
-        public static final int sbc_snippet_text=0x7f06000f;
-        public static final int share_text=0x7f060010;
-        public static final int status_text=0x7f060012;
-        public static final int status_view=0x7f060011;
-        public static final int transparent=0x7f060013;
-        public static final int viewfinder_frame=0x7f060014;
-        public static final int viewfinder_laser=0x7f060015;
-        public static final int viewfinder_mask=0x7f060016;
+    public static final class attr {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
         public static final int icon=0x7f020001;
-        public static final int launcher_icon=0x7f020002;
-        public static final int share_via_barcode=0x7f020003;
-        public static final int shopper_icon=0x7f020004;
-        public static final int splash=0x7f020005;
+        public static final int splash=0x7f020002;
     }
     public static final class id {
-        /**  Messages IDs 
-         */
-        public static final int auto_focus=0x7f070000;
-        public static final int back_button=0x7f070020;
-        public static final int barcode_image_view=0x7f07000f;
-        public static final int bookmark_title=0x7f07000a;
-        public static final int bookmark_url=0x7f07000b;
-        public static final int contents_supplement_text_view=0x7f070019;
-        public static final int contents_text_view=0x7f070018;
-        public static final int decode=0x7f070001;
-        public static final int decode_failed=0x7f070002;
-        public static final int decode_succeeded=0x7f070003;
-        public static final int done_button=0x7f070021;
-        public static final int encode_view=0x7f07001d;
-        public static final int format_text_view=0x7f070011;
-        public static final int format_text_view_label=0x7f070010;
-        public static final int help_contents=0x7f07001f;
-        public static final int image_view=0x7f07001e;
-        public static final int launch_product_query=0x7f070004;
-        public static final int menu_settings=0x7f07002d;
-        public static final int meta_text_view=0x7f070017;
-        public static final int meta_text_view_label=0x7f070016;
-        public static final int networkStatus=0x7f070022;
-        public static final int page_number_view=0x7f070026;
-        public static final int preview_view=0x7f07000c;
-        public static final int query_button=0x7f070024;
-        public static final int query_text_view=0x7f070023;
-        public static final int quit=0x7f070005;
-        public static final int restart_preview=0x7f070006;
-        public static final int result_button_view=0x7f07001a;
-        public static final int result_list_view=0x7f070025;
-        public static final int result_view=0x7f07000e;
-        public static final int return_scan_result=0x7f070007;
-        public static final int search_book_contents_failed=0x7f070008;
-        public static final int search_book_contents_succeeded=0x7f070009;
-        public static final int share_app_button=0x7f070028;
-        public static final int share_bookmark_button=0x7f070029;
-        public static final int share_clipboard_button=0x7f07002b;
-        public static final int share_contact_button=0x7f07002a;
-        public static final int share_text_view=0x7f07002c;
-        public static final int shopper_button=0x7f07001b;
-        public static final int snippet_view=0x7f070027;
-        public static final int status_view=0x7f07001c;
-        public static final int time_text_view=0x7f070015;
-        public static final int time_text_view_label=0x7f070014;
-        public static final int type_text_view=0x7f070013;
-        public static final int type_text_view_label=0x7f070012;
-        public static final int viewfinder_view=0x7f07000d;
+        public static final int menu_settings=0x7f090000;
     }
     public static final class layout {
-        public static final int bookmark_picker_list_item=0x7f030000;
-        public static final int capture=0x7f030001;
-        public static final int encode=0x7f030002;
-        public static final int help=0x7f030003;
-        public static final int main=0x7f030004;
-        public static final int network=0x7f030005;
-        public static final int search_book_contents=0x7f030006;
-        public static final int search_book_contents_header=0x7f030007;
-        public static final int search_book_contents_list_item=0x7f030008;
-        public static final int share=0x7f030009;
+        public static final int main=0x7f030000;
     }
     public static final class menu {
-        public static final int menu=0x7f0a0000;
-    }
-    public static final class raw {
-        public static final int beep=0x7f050000;
+        public static final int menu=0x7f080000;
     }
     public static final class string {
-        public static final int app_name=0x7f080000;
-        public static final int app_picker_name=0x7f080001;
-        public static final int bookmark_picker_name=0x7f080002;
-        public static final int button_add_calendar=0x7f080003;
-        public static final int button_add_contact=0x7f080004;
-        public static final int button_back=0x7f080005;
-        public static final int button_book_search=0x7f080006;
-        public static final int button_cancel=0x7f080007;
-        public static final int button_clipboard_empty=0x7f080008;
-        public static final int button_custom_product_search=0x7f080009;
-        public static final int button_dial=0x7f08000a;
-        public static final int button_done=0x7f08000b;
-        public static final int button_email=0x7f08000c;
-        public static final int button_get_directions=0x7f08000d;
-        public static final int button_google_shopper=0x7f08000e;
-        public static final int button_mms=0x7f08000f;
-        public static final int button_ok=0x7f080010;
-        public static final int button_open_browser=0x7f080011;
-        public static final int button_product_search=0x7f080012;
-        public static final int button_read_book=0x7f080013;
-        public static final int button_search_book_contents=0x7f080014;
-        public static final int button_share_app=0x7f080015;
-        public static final int button_share_bookmark=0x7f080016;
-        public static final int button_share_by_email=0x7f080017;
-        public static final int button_share_by_sms=0x7f080018;
-        public static final int button_share_clipboard=0x7f080019;
-        public static final int button_share_contact=0x7f08001a;
-        public static final int button_show_map=0x7f08001b;
-        public static final int button_sms=0x7f08001c;
-        public static final int button_web_search=0x7f08001d;
-        public static final int button_wifi=0x7f08001e;
-        public static final int contents_contact=0x7f08001f;
-        public static final int contents_email=0x7f080020;
-        public static final int contents_location=0x7f080021;
-        public static final int contents_phone=0x7f080022;
-        public static final int contents_sms=0x7f080023;
-        public static final int contents_text=0x7f080024;
-        public static final int hello_world=0x7f08007c;
-        public static final int history_clear_text=0x7f080025;
-        public static final int history_email_title=0x7f080026;
-        public static final int history_send=0x7f080027;
-        public static final int history_title=0x7f080028;
-        public static final int menu_about=0x7f080029;
-        public static final int menu_help=0x7f08002a;
-        public static final int menu_history=0x7f08002b;
-        public static final int menu_settings=0x7f08002c;
-        public static final int menu_share=0x7f08002d;
-        public static final int msg_about=0x7f08002e;
-        public static final int msg_buggy=0x7f08002f;
-        public static final int msg_bulk_mode_scanned=0x7f080030;
-        public static final int msg_camera_framework_bug=0x7f080031;
-        public static final int msg_default_contents=0x7f080032;
-        public static final int msg_default_format=0x7f080033;
-        public static final int msg_default_meta=0x7f080034;
-        public static final int msg_default_mms_subject=0x7f080035;
-        public static final int msg_default_status=0x7f080036;
-        public static final int msg_default_time=0x7f080037;
-        public static final int msg_default_type=0x7f080038;
-        public static final int msg_encode_barcode_failed=0x7f080039;
-        public static final int msg_encode_contents_failed=0x7f08003a;
-        public static final int msg_google_shopper_missing=0x7f08003b;
-        public static final int msg_install_google_shopper=0x7f08003c;
-        public static final int msg_intent_failed=0x7f08003d;
-        public static final int msg_loading_apps=0x7f08003e;
-        public static final int msg_not_our_results=0x7f08003f;
-        public static final int msg_redirect=0x7f080040;
-        public static final int msg_sbc_book_not_searchable=0x7f080041;
-        public static final int msg_sbc_failed=0x7f080042;
-        public static final int msg_sbc_no_page_returned=0x7f080043;
-        public static final int msg_sbc_page=0x7f080044;
-        public static final int msg_sbc_searching_book=0x7f080045;
-        public static final int msg_sbc_snippet_unavailable=0x7f080046;
-        public static final int msg_sbc_unknown_page=0x7f080047;
-        public static final int msg_share_explanation=0x7f080048;
-        public static final int msg_share_subject_line=0x7f080049;
-        public static final int msg_share_text=0x7f08004a;
-        public static final int msg_unmount_usb=0x7f08004b;
-        public static final int preferences_actions_title=0x7f08004c;
-        public static final int preferences_bulk_mode_summary=0x7f08004d;
-        public static final int preferences_bulk_mode_title=0x7f08004e;
-        public static final int preferences_copy_to_clipboard_title=0x7f08004f;
-        public static final int preferences_custom_product_search_summary=0x7f080050;
-        public static final int preferences_custom_product_search_title=0x7f080051;
-        public static final int preferences_decode_1D_title=0x7f080052;
-        public static final int preferences_decode_Data_Matrix_title=0x7f080053;
-        public static final int preferences_decode_QR_title=0x7f080054;
-        public static final int preferences_front_light_summary=0x7f080055;
-        public static final int preferences_front_light_title=0x7f080056;
-        public static final int preferences_general_title=0x7f080057;
-        public static final int preferences_name=0x7f080058;
-        public static final int preferences_play_beep_title=0x7f080059;
-        public static final int preferences_remember_duplicates_summary=0x7f08005a;
-        public static final int preferences_remember_duplicates_title=0x7f08005b;
-        public static final int preferences_result_title=0x7f08005e;
-        public static final int preferences_reverse_image_summary=0x7f08005c;
-        public static final int preferences_reverse_image_title=0x7f08005d;
-        public static final int preferences_scanning_title=0x7f08005f;
-        public static final int preferences_supplemental_summary=0x7f080060;
-        public static final int preferences_supplemental_title=0x7f080061;
-        public static final int preferences_vibrate_title=0x7f080062;
-        public static final int result_address_book=0x7f080063;
-        public static final int result_calendar=0x7f080064;
-        public static final int result_email_address=0x7f080065;
-        public static final int result_geo=0x7f080066;
-        public static final int result_isbn=0x7f080067;
-        public static final int result_product=0x7f080068;
-        public static final int result_sms=0x7f080069;
-        public static final int result_tel=0x7f08006a;
-        public static final int result_text=0x7f08006b;
-        public static final int result_uri=0x7f08006c;
-        public static final int result_wifi=0x7f08006d;
-        public static final int sbc_name=0x7f08006e;
-        public static final int share_name=0x7f08006f;
-        public static final int title_about=0x7f080070;
-        public static final int title_activity_kick_bak=0x7f08007d;
-        public static final int wa_name=0x7f080071;
-        public static final int wifi_changing_network=0x7f080072;
-        public static final int wifi_connect_failed=0x7f080078;
-        public static final int wifi_connected=0x7f080073;
-        public static final int wifi_creating_network=0x7f080074;
-        public static final int wifi_modifying_network=0x7f080075;
-        public static final int wifi_ssid_label=0x7f080079;
-        public static final int wifi_ssid_missing=0x7f080076;
-        public static final int wifi_type_incorrect=0x7f080077;
-        public static final int wifi_type_label=0x7f08007a;
-        public static final int zxing_url=0x7f08007b;
+        public static final int activate_encryption=0x7f060032;
+        /**  Manifest strings 
+         */
+        public static final int activity_device_admin=0x7f060004;
+        public static final int add_admin_extra_app_text=0x7f06003c;
+        /**  Strings used by the sample DeviceAdminReceiver 
+         */
+        public static final int admin_receiver_status=0x7f060052;
+        public static final int admin_receiver_status_disable_warning=0x7f060058;
+        public static final int admin_receiver_status_disabled=0x7f060054;
+        public static final int admin_receiver_status_enabled=0x7f060053;
+        public static final int admin_receiver_status_pw_changed=0x7f060055;
+        public static final int admin_receiver_status_pw_failed=0x7f060056;
+        public static final int admin_receiver_status_pw_succeeded=0x7f060057;
+        public static final int app_name=0x7f060000;
+        public static final int camera_disabled=0x7f060015;
+        public static final int camera_enabled=0x7f060016;
+        public static final int device_admin=0x7f060005;
+        public static final int device_admin_description=0x7f060006;
+        public static final int device_capabilities_category=0x7f06000d;
+        public static final int disable_camera=0x7f06000e;
+        public static final int disable_keyguard_secure_camera=0x7f060010;
+        public static final int disable_keyguard_widgets=0x7f06000f;
+        public static final int enable_admin=0x7f06000c;
+        public static final int encryption_category=0x7f060030;
+        public static final int encryption_not_supported=0x7f060048;
+        public static final int encryption_not_supported_ok=0x7f060049;
+        public static final int encryption_status_activating=0x7f06004d;
+        public static final int encryption_status_active=0x7f06004e;
+        public static final int encryption_status_inactive=0x7f06004c;
+        public static final int encryption_status_unknown=0x7f06004a;
+        public static final int encryption_status_unsupported=0x7f06004b;
+        public static final int expiration_status_future=0x7f060051;
+        public static final int expiration_status_none=0x7f06004f;
+        public static final int expiration_status_past=0x7f060050;
+        public static final int header_encryption=0x7f06000b;
+        public static final int header_expiration=0x7f060009;
+        /**  Strings used in preference headers and preference definitions 
+         */
+        public static final int header_general=0x7f060007;
+        public static final int header_lock_wipe=0x7f06000a;
+        public static final int header_quality=0x7f060008;
+        public static final int hello_world=0x7f060001;
+        public static final int keyguard_secure_camera_disabled=0x7f060013;
+        public static final int keyguard_secure_camera_enabled=0x7f060014;
+        public static final int keyguard_widgets_disabled=0x7f060011;
+        public static final int keyguard_widgets_enabled=0x7f060012;
+        public static final int lock_screen=0x7f06002b;
+        public static final int lock_wipe_category=0x7f060028;
+        public static final int maximum_lock_time=0x7f060029;
+        public static final int maximum_password_fails=0x7f06002a;
+        public static final int menu_settings=0x7f060002;
+        public static final int monkey_encryption=0x7f060037;
+        public static final int monkey_lock_screen=0x7f060036;
+        public static final int monkey_ok=0x7f060039;
+        public static final int monkey_reset_password=0x7f060035;
+        public static final int monkey_wipe_data=0x7f060038;
+        public static final int number_format_warning=0x7f060040;
+        public static final int password_controls_category=0x7f060017;
+        public static final int password_expiration_category=0x7f060024;
+        public static final int password_expiration_status=0x7f060027;
+        public static final int password_expiration_timeout=0x7f060026;
+        public static final int password_history_depth=0x7f060025;
+        public static final int password_insufficient=0x7f060034;
+        public static final int password_minimum_length=0x7f06001d;
+        public static final int password_minimum_letters=0x7f06001e;
+        public static final int password_minimum_lower_case=0x7f060020;
+        public static final int password_minimum_non_letter=0x7f060023;
+        public static final int password_minimum_numeric=0x7f06001f;
+        public static final int password_minimum_symbols=0x7f060022;
+        public static final int password_minimum_upper_case=0x7f060021;
+        public static final int password_quality=0x7f06001c;
+        public static final int password_quality_category=0x7f06001b;
+        /**  Strings used by DeviceAdminSample controller code 
+         */
+        public static final int password_sufficient=0x7f060033;
+        public static final int require_encryption=0x7f060031;
+        public static final int reset_password_ok=0x7f06003b;
+        public static final int reset_password_warning=0x7f06003a;
+        public static final int set_password_api=0x7f060019;
+        public static final int set_password_api_dialog=0x7f06001a;
+        public static final int set_password_user=0x7f060018;
+        public static final int status_days_hours_minutes=0x7f06003f;
+        public static final int status_device_encryption=0x7f06003e;
+        public static final int status_local_global=0x7f06003d;
+        public static final int title_activity_kick_bak=0x7f060003;
+        public static final int wipe_all_data=0x7f06002e;
+        public static final int wipe_all_data_summary=0x7f06002f;
+        public static final int wipe_data=0x7f06002c;
+        public static final int wipe_data_summary=0x7f06002d;
+        public static final int wipe_warning_first=0x7f060041;
+        public static final int wipe_warning_first_no=0x7f060043;
+        public static final int wipe_warning_first_ok=0x7f060042;
+        public static final int wipe_warning_second=0x7f060044;
+        public static final int wipe_warning_second_full=0x7f060045;
+        public static final int wipe_warning_second_no=0x7f060047;
+        public static final int wipe_warning_second_ok=0x7f060046;
     }
     public static final class style {
-        public static final int AppTheme=0x7f090000;
+        public static final int AppTheme=0x7f070000;
     }
     public static final class xml {
         public static final int config=0x7f040000;
-        public static final int preferences=0x7f040001;
+        public static final int device_admin=0x7f040001;
+        public static final int device_admin_encryption=0x7f040002;
+        public static final int device_admin_expiration=0x7f040003;
+        public static final int device_admin_general=0x7f040004;
+        public static final int device_admin_headers=0x7f040005;
+        public static final int device_admin_lock_wipe=0x7f040006;
+        public static final int device_admin_quality=0x7f040007;
     }
-    public static final class styleable {
-        /** Attributes that can be used with a ViewfinderView.
-         */
-        public static final int[] ViewfinderView = {
-            
-        };
-    };
 }

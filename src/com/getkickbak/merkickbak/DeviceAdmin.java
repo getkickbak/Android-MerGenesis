@@ -52,7 +52,7 @@ public class DeviceAdmin extends PreferenceActivity
 {
 
 	// Miscellaneous utilities and definitions
-	private static final String TAG                                = "DeviceAdminSample";
+	private static final String TAG                                = "DeviceAdmin";
 
 	private static final int    REQUEST_CODE_ENABLE_ADMIN          = 1;
 	private static final int    REQUEST_CODE_START_ENCRYPTION      = 2;
@@ -97,7 +97,7 @@ public class DeviceAdmin extends PreferenceActivity
 
 	// Interaction with the DevicePolicyManager
 	DevicePolicyManager         mDPM;
-	ComponentName               mDeviceAdminSample;
+	ComponentName               mDeviceAdmin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -106,7 +106,7 @@ public class DeviceAdmin extends PreferenceActivity
 
 		// Prepare to work with the DPM
 		mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-		mDeviceAdminSample = new ComponentName(this, Receiver.class);
+		mDeviceAdmin = new ComponentName(this, Receiver.class);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class DeviceAdmin extends PreferenceActivity
 	 */
 	private boolean isActiveAdmin()
 	{
-		return mDPM.isAdminActive(mDeviceAdminSample);
+		return mDPM.isAdminActive(mDeviceAdmin);
 	}
 
 	/**
@@ -131,14 +131,14 @@ public class DeviceAdmin extends PreferenceActivity
 	 * 1. Provides instance variables to access activity/context, DevicePolicyManager, etc.
 	 * 2. Provides support for the "set password" button(s) shared by multiple fragments.
 	 */
-	public static class AdminSampleFragment extends PreferenceFragment implements OnPreferenceChangeListener,
+	public static class AdminFragment extends PreferenceFragment implements OnPreferenceChangeListener,
 	      OnPreferenceClickListener
 	{
 
 		// Useful instance variables
 		protected DeviceAdmin         mActivity;
 		protected DevicePolicyManager mDPM;
-		protected ComponentName       mDeviceAdminSample;
+		protected ComponentName       mDeviceAdmin;
 		protected boolean             mAdminActive;
 
 		// Optional shared UI
@@ -153,7 +153,7 @@ public class DeviceAdmin extends PreferenceActivity
 			// Retrieve the useful instance variables
 			mActivity = (DeviceAdmin) getActivity();
 			mDPM = mActivity.mDPM;
-			mDeviceAdminSample = mActivity.mDeviceAdminSample;
+			mDeviceAdmin = mActivity.mDeviceAdmin;
 			mAdminActive = mActivity.isActiveAdmin();
 
 			// Configure the shared UI elements (if they exist)
@@ -254,7 +254,7 @@ public class DeviceAdmin extends PreferenceActivity
 	/**
 	 * PreferenceFragment for "general" preferences.
 	 */
-	public static class GeneralFragment extends AdminSampleFragment implements OnPreferenceChangeListener
+	public static class GeneralFragment extends AdminFragment implements OnPreferenceChangeListener
 	{
 		// UI elements
 		private CheckBoxPreference mEnableCheckbox;
@@ -287,7 +287,7 @@ public class DeviceAdmin extends PreferenceActivity
 
 			if (mAdminActive)
 			{
-				mDPM.setCameraDisabled(mDeviceAdminSample, mDisableCameraCheckbox.isChecked());
+				mDPM.setCameraDisabled(mDeviceAdmin, mDisableCameraCheckbox.isChecked());
 				// mDPM.setKeyguardDisabledFeatures(mDeviceAdminSample, createKeyguardDisabledFlag());
 				reloadSummaries();
 			}
@@ -318,7 +318,7 @@ public class DeviceAdmin extends PreferenceActivity
 					{
 						// Launch the activity to have the user enable our admin.
 						Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-						intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
+						intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdmin);
 						intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, mActivity.getString(R.string.add_admin_extra_app_text));
 						startActivityForResult(intent, REQUEST_CODE_ENABLE_ADMIN);
 						// return false - don't update checkbox until we're really active
@@ -326,7 +326,7 @@ public class DeviceAdmin extends PreferenceActivity
 					}
 					else
 					{
-						mDPM.removeActiveAdmin(mDeviceAdminSample);
+						mDPM.removeActiveAdmin(mDeviceAdmin);
 						enableDeviceCapabilitiesArea(false);
 						mAdminActive = false;
 					}
@@ -334,7 +334,7 @@ public class DeviceAdmin extends PreferenceActivity
 			}
 			else if (preference == mDisableCameraCheckbox)
 			{
-				mDPM.setCameraDisabled(mDeviceAdminSample, value);
+				mDPM.setCameraDisabled(mDeviceAdmin, value);
 				reloadSummaries();
 			}
 			else if (preference == mDisableKeyguardWidgetsCheckbox || preference == mDisableKeyguardSecureCameraCheckbox)
@@ -349,7 +349,7 @@ public class DeviceAdmin extends PreferenceActivity
 		protected void reloadSummaries()
 		{
 			super.reloadSummaries();
-			String cameraSummary = getString(mDPM.getCameraDisabled(mDeviceAdminSample) ? R.string.camera_disabled
+			String cameraSummary = getString(mDPM.getCameraDisabled(mDeviceAdmin) ? R.string.camera_disabled
 			      : R.string.camera_enabled);
 			mDisableCameraCheckbox.setSummary(cameraSummary);
 
@@ -377,7 +377,7 @@ public class DeviceAdmin extends PreferenceActivity
 	/**
 	 * PreferenceFragment for "password quality" preferences.
 	 */
-	public static class QualityFragment extends AdminSampleFragment implements OnPreferenceChangeListener
+	public static class QualityFragment extends AdminFragment implements OnPreferenceChangeListener
 	{
 
 		// Password quality values
@@ -455,28 +455,28 @@ public class DeviceAdmin extends PreferenceActivity
 			super.reloadSummaries();
 			// Show numeric settings for each policy API
 			int local, global;
-			local = mDPM.getPasswordQuality(mDeviceAdminSample);
+			local = mDPM.getPasswordQuality(mDeviceAdmin);
 			global = mDPM.getPasswordQuality(null);
 			mPasswordQuality.setSummary(localGlobalSummary(qualityValueToString(local), qualityValueToString(global)));
-			local = mDPM.getPasswordMinimumLength(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumLength(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumLength(null);
 			mMinLength.setSummary(localGlobalSummary(local, global));
-			local = mDPM.getPasswordMinimumLetters(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumLetters(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumLetters(null);
 			mMinLetters.setSummary(localGlobalSummary(local, global));
-			local = mDPM.getPasswordMinimumNumeric(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumNumeric(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumNumeric(null);
 			mMinNumeric.setSummary(localGlobalSummary(local, global));
-			local = mDPM.getPasswordMinimumLowerCase(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumLowerCase(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumLowerCase(null);
 			mMinLowerCase.setSummary(localGlobalSummary(local, global));
-			local = mDPM.getPasswordMinimumUpperCase(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumUpperCase(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumUpperCase(null);
 			mMinUpperCase.setSummary(localGlobalSummary(local, global));
-			local = mDPM.getPasswordMinimumSymbols(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumSymbols(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumSymbols(null);
 			mMinSymbols.setSummary(localGlobalSummary(local, global));
-			local = mDPM.getPasswordMinimumNonLetter(mDeviceAdminSample);
+			local = mDPM.getPasswordMinimumNonLetter(mDeviceAdmin);
 			global = mDPM.getPasswordMinimumNonLetter(null);
 			mMinNonLetter.setSummary(localGlobalSummary(local, global));
 		}
@@ -499,35 +499,35 @@ public class DeviceAdmin extends PreferenceActivity
 			}
 			if (preference == mPasswordQuality)
 			{
-				mDPM.setPasswordQuality(mDeviceAdminSample, value);
+				mDPM.setPasswordQuality(mDeviceAdmin, value);
 			}
 			else if (preference == mMinLength)
 			{
-				mDPM.setPasswordMinimumLength(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumLength(mDeviceAdmin, value);
 			}
 			else if (preference == mMinLetters)
 			{
-				mDPM.setPasswordMinimumLetters(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumLetters(mDeviceAdmin, value);
 			}
 			else if (preference == mMinNumeric)
 			{
-				mDPM.setPasswordMinimumNumeric(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumNumeric(mDeviceAdmin, value);
 			}
 			else if (preference == mMinLowerCase)
 			{
-				mDPM.setPasswordMinimumLowerCase(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumLowerCase(mDeviceAdmin, value);
 			}
 			else if (preference == mMinUpperCase)
 			{
-				mDPM.setPasswordMinimumUpperCase(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumUpperCase(mDeviceAdmin, value);
 			}
 			else if (preference == mMinSymbols)
 			{
-				mDPM.setPasswordMinimumSymbols(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumSymbols(mDeviceAdmin, value);
 			}
 			else if (preference == mMinNonLetter)
 			{
-				mDPM.setPasswordMinimumNonLetter(mDeviceAdminSample, value);
+				mDPM.setPasswordMinimumNonLetter(mDeviceAdmin, value);
 			}
 			reloadSummaries();
 			return true;
@@ -550,7 +550,7 @@ public class DeviceAdmin extends PreferenceActivity
 	/**
 	 * PreferenceFragment for "password expiration" preferences.
 	 */
-	public static class ExpirationFragment extends AdminSampleFragment implements OnPreferenceChangeListener,
+	public static class ExpirationFragment extends AdminFragment implements OnPreferenceChangeListener,
 	      OnPreferenceClickListener
 	{
 		private PreferenceCategory mExpirationCategory;
@@ -590,12 +590,12 @@ public class DeviceAdmin extends PreferenceActivity
 			super.reloadSummaries();
 
 			int local, global;
-			local = mDPM.getPasswordHistoryLength(mDeviceAdminSample);
+			local = mDPM.getPasswordHistoryLength(mDeviceAdmin);
 			global = mDPM.getPasswordHistoryLength(null);
 			mHistory.setSummary(localGlobalSummary(local, global));
 
 			long localLong, globalLong;
-			localLong = mDPM.getPasswordExpirationTimeout(mDeviceAdminSample);
+			localLong = mDPM.getPasswordExpirationTimeout(mDeviceAdmin);
 			globalLong = mDPM.getPasswordExpirationTimeout(null);
 			mExpirationTimeout.setSummary(localGlobalSummary(localLong / MS_PER_MINUTE, globalLong / MS_PER_MINUTE));
 
@@ -621,11 +621,11 @@ public class DeviceAdmin extends PreferenceActivity
 			}
 			if (preference == mHistory)
 			{
-				mDPM.setPasswordHistoryLength(mDeviceAdminSample, value);
+				mDPM.setPasswordHistoryLength(mDeviceAdmin, value);
 			}
 			else if (preference == mExpirationTimeout)
 			{
-				mDPM.setPasswordExpirationTimeout(mDeviceAdminSample, value * MS_PER_MINUTE);
+				mDPM.setPasswordExpirationTimeout(mDeviceAdmin, value * MS_PER_MINUTE);
 			}
 			reloadSummaries();
 			return true;
@@ -651,7 +651,7 @@ public class DeviceAdmin extends PreferenceActivity
 		private String getExpirationStatus()
 		{
 			// expirations are absolute; convert to relative for display
-			long localExpiration = mDPM.getPasswordExpiration(mDeviceAdminSample);
+			long localExpiration = mDPM.getPasswordExpiration(mDeviceAdmin);
 			long globalExpiration = mDPM.getPasswordExpiration(null);
 			long now = System.currentTimeMillis();
 
@@ -701,7 +701,7 @@ public class DeviceAdmin extends PreferenceActivity
 	/**
 	 * PreferenceFragment for "lock screen & wipe" preferences.
 	 */
-	public static class LockWipeFragment extends AdminSampleFragment implements OnPreferenceChangeListener,
+	public static class LockWipeFragment extends AdminFragment implements OnPreferenceChangeListener,
 	      OnPreferenceClickListener
 	{
 		private PreferenceCategory mLockWipeCategory;
@@ -747,12 +747,12 @@ public class DeviceAdmin extends PreferenceActivity
 			super.reloadSummaries();
 
 			long localLong, globalLong;
-			localLong = mDPM.getMaximumTimeToLock(mDeviceAdminSample);
+			localLong = mDPM.getMaximumTimeToLock(mDeviceAdmin);
 			globalLong = mDPM.getMaximumTimeToLock(null);
 			mMaxTimeScreenLock.setSummary(localGlobalSummary(localLong / MS_PER_MINUTE, globalLong / MS_PER_MINUTE));
 
 			int local, global;
-			local = mDPM.getMaximumFailedPasswordsForWipe(mDeviceAdminSample);
+			local = mDPM.getMaximumFailedPasswordsForWipe(mDeviceAdmin);
 			global = mDPM.getMaximumFailedPasswordsForWipe(null);
 			mMaxFailures.setSummary(localGlobalSummary(local, global));
 		}
@@ -775,12 +775,12 @@ public class DeviceAdmin extends PreferenceActivity
 			}
 			if (preference == mMaxTimeScreenLock)
 			{
-				mDPM.setMaximumTimeToLock(mDeviceAdminSample, value * MS_PER_MINUTE);
+				mDPM.setMaximumTimeToLock(mDeviceAdmin, value * MS_PER_MINUTE);
 			}
 			else if (preference == mMaxFailures)
 			{
 				if (alertIfMonkey(mActivity, R.string.monkey_wipe_data)) { return true; }
-				mDPM.setMaximumFailedPasswordsForWipe(mDeviceAdminSample, value);
+				mDPM.setMaximumFailedPasswordsForWipe(mDeviceAdmin, value);
 			}
 			reloadSummaries();
 			return true;
@@ -852,7 +852,7 @@ public class DeviceAdmin extends PreferenceActivity
 	/**
 	 * PreferenceFragment for "encryption" preferences.
 	 */
-	public static class EncryptionFragment extends AdminSampleFragment implements OnPreferenceChangeListener,
+	public static class EncryptionFragment extends AdminFragment implements OnPreferenceChangeListener,
 	      OnPreferenceClickListener
 	{
 		private PreferenceCategory mEncryptionCategory;
@@ -878,7 +878,7 @@ public class DeviceAdmin extends PreferenceActivity
 		{
 			super.onResume();
 			mEncryptionCategory.setEnabled(mAdminActive);
-			mRequireEncryption.setChecked(mDPM.getStorageEncryption(mDeviceAdminSample));
+			mRequireEncryption.setChecked(mDPM.getStorageEncryption(mDeviceAdmin));
 		}
 
 		/**
@@ -890,7 +890,7 @@ public class DeviceAdmin extends PreferenceActivity
 			super.reloadSummaries();
 
 			boolean local, global;
-			local = mDPM.getStorageEncryption(mDeviceAdminSample);
+			local = mDPM.getStorageEncryption(mDeviceAdmin);
 			global = mDPM.getStorageEncryption(null);
 			mRequireEncryption.setSummary(localGlobalSummary(local, global));
 
@@ -907,7 +907,7 @@ public class DeviceAdmin extends PreferenceActivity
 			if (preference == mRequireEncryption)
 			{
 				boolean newActive = (Boolean) newValue;
-				mDPM.setStorageEncryption(mDeviceAdminSample, newActive);
+				mDPM.setStorageEncryption(mDeviceAdmin, newActive);
 				reloadSummaries();
 				return true;
 			}

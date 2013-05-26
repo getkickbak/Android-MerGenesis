@@ -126,34 +126,6 @@
                   posConnect();
                }
             }, false);
-            window.addEventListener("batterylow", function(info)
-            {
-               if (Ext.device)
-               {
-                  Ext.device.Notification.show(
-                  {
-                     title : 'Battery Level Low',
-                     messsage : 'Battery is at ' + info.level + '%'
-                  });
-                  Ext.device.Notification.vibrate();
-
-               }
-            }, false);
-            window.addEventListener("batterycritical", function(info)
-            {
-               if (Ext.device)
-               {
-                  Ext.device.Notification.show(
-                  {
-                     title : 'Battery Level Critical',
-                     messsage : 'Battery is at ' + info.level + '%' + '\n' + //
-                     'Recharge Soon!'
-                  });
-                  Ext.device.Notification.vibrate();
-                  Ext.device.Notification.beep();
-               }
-            }, false);
-
             document.addEventListener("deviceready", function()
             {
                navigator.splashscreen.show();

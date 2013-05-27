@@ -210,6 +210,10 @@ public class WebSocket extends WebSocketClient
 	 */
 	private String buildJavaScriptData(String event, String msg)
 	{
+		if (msg == null)
+		{
+			msg = "";
+		}
 		String _d = "javascript:WebSocket." + event + "(" + "{" + "\"_target\":\"" + id + "\"," + "\"data\":'"
 		      + msg.replaceAll("'", "\\\\'") + "'" + "}" + ")";
 		return _d;

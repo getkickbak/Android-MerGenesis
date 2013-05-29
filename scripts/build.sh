@@ -7,6 +7,7 @@ NDK_ROOT="/Developer/SDKs/android-ndk-r8c"
 libPath="../lib/touch-2.1.1";
 
 touch -cm ${PROJECT_DIR}/www
+mkdir -p $PROJECT_DIR/www/app/worker
 mkdir -p $PROJECT_DIR/www/app/store
 mkdir -p $PROJECT_DIR/www/app/profile
 mkdir -p $PROJECT_DIR/www/resources/themes/images/v1
@@ -16,6 +17,7 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/app/profile/Android.js $PROJECT_
                                                           
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/*.wav $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/*.htm $PROJECT_DIR/www/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/worker/server.js $PROJECT_DIR/www/worker/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/server-all.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/core.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/index_android_server.html $PROJECT_DIR/www/index.html

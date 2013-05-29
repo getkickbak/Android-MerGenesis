@@ -36,6 +36,35 @@ var uploadReceipts = function(scope)
    {
    }
 };
+var insertReceipts = function(receipts, scope)
+{
+   var db = openDatabase('KickBak', 'ReceiptStore', "1.0", 5 * 1024 * 1024);
+   try
+   {
+      db.transaction(function(tx)
+      {
+         for (var x = 0; x < receipts.length; x++)
+         {
+            var receipt = Ext.encode(receipts[x]);
+            tx.executeSql(insertStatement, [receipt['id'], receipt], function()
+            {
+               scope.postMessage(JSON.stringify(
+               {
+                  cmd : 'insertReceipts',
+                  result : receipts.length
+               }));
+            }, function(tx, error)
+            {
+               //console.debug("Failed to insert Customer(" + receipt.getId() + ") to Database : " +
+               // error.message);
+            });
+         }
+      });
+   }
+   catch(e)
+   {
+   }
+};
 var updateReceipts = function(ids, scope)
 {
    var db = openDatabase('KickBak', 'ReceiptStore', "1.0", 5 * 1024 * 1024);
@@ -108,6 +137,11 @@ if ( typeof (Worker) != 'undefined')
          case 'uploadReceipts' :
          {
             uploadReceipts(self);
+            break;
+         }
+         case 'insertReceipts' :
+         {
+            insertReceipt(data.receipts, self)
             break;
          }
          case 'updateReceipts' :

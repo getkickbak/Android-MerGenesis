@@ -1,31 +1,40 @@
-var uploadReceipts = function(scope)
+var uploadReceipts = function(lastReceiptTime, scope)
 {
    var db = openDatabase('KickBak', 'ReceiptStore', "1.0", 5 * 1024 * 1024);
    //var createStatement = "CREATE TABLE IF NOT EXISTS Receipt (id INTEGER PRIMARY KEY, receipt TEXT, sync INTEGER)";
    var selectAllStatement = "SELECT receipt FROM Receipt WHERE sync=0";
+   var deleteStatement = "DELETE FROM Receipt WHERE id<? AND sync=1";
+   var conn = scope;
    try
    {
       db.transaction(function(tx)
       {
-         //
-         // Retrieve Receipts
-         //
-         tx.executeSql(selectAllStatement, [], function(tx, result)
+         console.debug("Removing all EarnedReceipts with TimeStamp : " + lastReceiptTime);
+         tx.executeSql(deleteStatement, [Number(lastReceiptTime)], function(tx, result)
          {
-            var items = [], item;
-            var dataset = result.rows;
-            for ( j = 0; j < dataset.length; j++)
+            //
+            // Retrieve Receipts
+            //
+            tx.executeSql(selectAllStatement, [], function(tx, result)
             {
-               item = dataset.item(j);
-               items.push(item);
-               //console.debug("Receipt TnId[" + item['tnId'] + "]");
-            }
+               var items = [], item;
+               var dataset = result.rows;
+               for ( j = 0; j < dataset.length; j++)
+               {
+                  item = dataset.item(j);
+                  items.push(item);
+                  //console.debug("Receipt TnId[" + item['tnId'] + "]");
+               }
 
-            scope.postMessage(JSON.stringify(
+               conn.postMessage(JSON.stringify(
+               {
+                  cmd : 'uploadReceipts',
+                  result : items
+               }));
+            }, function(tx, error)
             {
-               cmd : 'uploadReceipts',
-               result : items
-            }));
+               console.debug("No Receipt Table found in SQL Database : " + error.message);
+            });
          }, function(tx, error)
          {
             console.debug("No Receipt Table found in SQL Database : " + error.message);
@@ -136,7 +145,7 @@ if ( typeof (Worker) != 'undefined')
       {
          case 'uploadReceipts' :
          {
-            uploadReceipts(self);
+            uploadReceipts(data.lastReceiptTime, self);
             break;
          }
          case 'insertReceipts' :
@@ -181,7 +190,7 @@ else
          {
             case 'uploadReceipts' :
             {
-               uploadReceipts(this.responseHandler);
+               uploadReceipts(data.lastReceiptTime, this.responseHandler);
                break;
             }
             case 'updateReceipts' :

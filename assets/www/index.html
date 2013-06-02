@@ -39,14 +39,14 @@
 
          var offlineDialogShown = false;
          var phoneGapAvailable = true;
-         var debugMode = true;
+         var debugMode = false;
          var serverHost;
          //serverHost = 'http://192.168.0.52:3000';
          //serverHost = 'http://192.168.0.46:3000';
 		 //serverHost = 'http://76.10.173.153';
-		 serverHost = 'http://www.dev1getkickbak.com';
+		 //serverHost = 'http://www.dev1getkickbak.com';
 		 //serverHost = 'http://www.devgetkickbak.com';
-		 //serverHost = 'http://www.getkickbak.com';
+		 serverHost = 'http://www.getkickbak.com';
          var merchantMode = true;
          var appName = 'MerKickBak';
 
@@ -153,8 +153,10 @@
             Ext.application(
             {
                profiles : ['Android'],
-               views : ['Document', 'server.Rewards', 'server.Redemptions', 'server.MerchantAccount', 'server.MainPage', 'widgets.server.RedeemItemDetail', 'server.SettingsPage', 'server.TagCreatePage', 'Viewport'],
-               controllers : ['server.Viewport', 'server.MainPage', 'server.Challenges',  'server.Receipts', 'server.Rewards', 'server.Redemptions', 'server.Merchants', 'server.Settings', 'server.Prizes'],
+               views : ['Document', 'server.Rewards', 'server.Redemptions', 'server.MerchantAccount', 'server.MainPage', //
+               'widgets.server.RedeemItemDetail', 'server.SettingsPage', 'server.TagCreatePage', 'Viewport'],
+               controllers : ['server.Viewport', 'server.MainPage', 'server.Challenges',  'server.Receipts', 'server.Rewards',//
+                'server.Redemptions', 'server.Merchants', 'server.Settings', 'server.Prizes'],
                launch : function()
                {
                   _application = this;

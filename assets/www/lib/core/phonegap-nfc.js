@@ -25,7 +25,7 @@ function handleNfcFromIntentFilter() {
     );
 }
 
-document.addEventListener('deviceready', handleNfcFromIntentFilter, false);
+//document.addEventListener('deviceready', handleNfcFromIntentFilter, false);
 
 var ndef = {
         

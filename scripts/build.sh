@@ -26,6 +26,8 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/../lib/*min.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/websocket.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*nfc*.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/lib/core/*.android.js $PROJECT_DIR/www/lib/core/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/../lib/core/date.js $PROJECT_DIR/www/lib/core/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/../lib/core/extras.js $PROJECT_DIR/www/lib/core/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/$libPath/sencha-touch-all.js $PROJECT_DIR/www/lib/
                                                           
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/resources/keys.txt $PROJECT_DIR/www/resources/

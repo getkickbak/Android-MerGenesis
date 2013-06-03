@@ -1,6 +1,8 @@
 var createReceipts = function(scope)
 {
    var createStatement = "CREATE TABLE IF NOT EXISTS Receipt (id INTEGER PRIMARY KEY, receipt TEXT, sync INTEGER)";
+   var countStatement = "SELECT COUNT(id) AS cnt FROM Receipt";
+   var countSyncStatement = "SELECT COUNT(id) AS cnt FROM Receipt WHERE sync=1";
    var db = openDatabase('KickBak', 'ReceiptStore', "1.0", 5 * 1024 * 1024);
    try
    {
@@ -18,6 +20,24 @@ var createReceipts = function(scope)
          }, function(tx, error)
          {
             console.debug("Failed to create KickBak-Receipt Table : " + error.message);
+         });
+         //
+         // Diagnostic Table
+         //
+         tx.executeSql(countStatement, [], function(tx, result)
+         {
+            console.debug(result.rows.item(0).cnt + " (TOTAL) EarnedReceipts in KickBak-Receipt DB");
+         }, function(tx, error)
+         {
+         });
+         //
+         // Count Sync Entries
+         //
+         tx.executeSql(countSyncStatement, [], function(tx, result)
+         {
+            console.debug(result.rows.item(0).cnt + " (SYNC) EarnedReceipts in KickBak-Receipt DB");
+         }, function(tx, error)
+         {
          });
       });
    }
@@ -38,10 +58,9 @@ var uploadReceipts = function(lastReceiptTime, scope)
          if (lastReceiptTime > 0)
          {
             //console.debug("Removing all EarnedReceipts with TimeStamp : " + lastReceiptTime);
-            tx.executeSql(deleteStatement, [Number(lastReceiptTime)], function(tx, result)
+            tx.executeSql(deleteStatement, [lastReceiptTime], function(tx, result)
             {
-               var dataset = result.rows;
-               console.debug(dataset.length + " EarnedReceipts removed with TimeStamp : " + Genesis.fn.convertDateFullTime(new Date(lastReceiptTime * 1000)));
+               console.debug("All (SYNC) EarnedReceipts removed prior to " + Genesis.fn.convertDateFullTime(new Date(lastReceiptTime * 1000)));
             }, function(tx, error)
             {
                console.debug("No Receipt Table found in SQL Database : " + error.message);
@@ -136,11 +155,11 @@ var updateReceipts = function(ids, scope)
                }));
             }
             /*
-            else
-            {
-               console.debug("updateReceipts --- No Receipt Entries were updated to SYNC");
-            }
-            */
+             else
+             {
+             console.debug("updateReceipts --- No Receipt Entries were updated to SYNC");
+             }
+             */
          }, function(tx, error)
          {
             console.debug("updateReceipts --- No Receipt Entries were updated to SYNC");
@@ -321,6 +340,10 @@ else
    {
       fn :
       {
+         convertDateFullTime : function(v)
+         {
+            return v.format('D, M d, Y \\a\\t g:i A');
+         },
          currentDateTime : function(currentDate)
          {
             //return (this.systemTime - this.clientTime) + currentDate;
@@ -427,4 +450,9 @@ else
          }
       }
    };
+}
+
+if ( typeof (importScripts) != 'undefined')
+{
+   importScripts('../../lib/core/date.js', '../../lib/core/extras.js', '../lib/core/date.js', '../lib/core/extras.js');
 }

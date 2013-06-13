@@ -27,9 +27,10 @@
     <access origin="http://192.168.0.52"/>
     <access origin="http://192.168.0.46"/>
     <access origin="http://76.10.173.153"/> 
-    <access origin="http://*.devgetkickbak.com" subdomains="true" />
-    <access origin="http://*.getkickbak.com" subdomains="true" />
-    <access origin="http://*.googleapis.com" subdomains="true" />
+    <access origin="http://dev1getkickbak.com" subdomains="true" />
+    <access origin="http://devgetkickbak.com" subdomains="true" />
+    <access origin="http://getkickbak.com" subdomains="true" />
+    <access origin="http://googleapis.com" subdomains="true" />
     <access origin="https://s3.amazonaws.com" />
     <access origin="http://s3.amazonaws.com" />
     
@@ -46,10 +47,11 @@
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
 <plugins>
-   <plugin name="ProximityIDPlugin" value="com.getkickbak.plugin.ProximityIDPlugin"/>
-   <plugin name="NotificationPlugin" value="com.getkickbak.plugin.NotificationPlugin"/>
-   <plugin name="NfcPlugin" value="com.chariotsolutions.nfc.plugin.NfcPlugin"/>
-	<plugin name="WebIntent" value="com.borismus.webintent.WebIntent"/>
+    <plugin name="ProximityIDPlugin" value="com.getkickbak.plugin.ProximityIDPlugin"/>
+    <plugin name="NotificationPlugin" value="com.getkickbak.plugin.NotificationPlugin"/>
+    <plugin name="NfcPlugin" value="com.chariotsolutions.nfc.plugin.NfcPlugin"/>
+    <plugin name="WifiConnMgr" value="com.getkickbak.plugin.wifimanager.Manager"/>
+    <plugin name="WebIntent" value="com.borismus.webintent.WebIntent"/>
     <plugin name="LowLatencyAudio" value="com.phonegap.PGLowLatencyAudio" />
     <plugin name="BarCodeScanner" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
     

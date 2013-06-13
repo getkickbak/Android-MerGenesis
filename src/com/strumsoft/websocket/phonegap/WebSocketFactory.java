@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2010 Animesh Kumar  (https://github.com/anismiles)
- * Copyright (c) 2010 Strumsoft  (https://strumsoft.com)
- * 
+ * Copyright (c) 2010 Animesh Kumar (https://github.com/anismiles)
+ * Copyright (c) 2010 Strumsoft (https://strumsoft.com)
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -10,10 +9,8 @@
  * copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following
  * conditions:
- *  
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- *  
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,15 +19,14 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
- *  
  */
 package com.strumsoft.websocket.phonegap;
 
 import java.net.URI;
+import java.util.Hashtable;
 import java.util.Random;
 
 import android.webkit.WebView;
-
 
 /**
  * The <tt>WebSocketFactory</tt> is like a helper class to instantiate new
@@ -39,41 +35,49 @@ import android.webkit.WebView;
  * 
  * @author Animesh Kumar
  */
-public class WebSocketFactory {
+public class WebSocketFactory
+{
 
 	/** The app view. */
-	WebView appView;
+	WebView                              appView;
 
 	/**
 	 * Instantiates a new web socket factory.
 	 * 
 	 * @param appView
-	 *            the app view
+	 *           the app view
 	 */
-	public WebSocketFactory(WebView appView) {
+	public WebSocketFactory(WebView appView)
+	{
 		this.appView = appView;
 	}
 
 	@android.webkit.JavascriptInterface
-	public WebSocket getInstance(String url) {
+	public WebSocket getInstance(String url)
+	{
 		// use Draft75 by default
 		return getInstance(url, WebSocket.Draft.DRAFT75);
 	}
 
 	@android.webkit.JavascriptInterface()
-	public WebSocket getInstance(String url, WebSocket.Draft draft) {
+	public WebSocket getInstance(String url, WebSocket.Draft draft)
+	{
 		WebSocket socket = null;
 		Thread th = null;
-		try {
+		try
+		{
 			socket = new WebSocket(appView, new URI(url), draft, getRandonUniqueId());
 			th = socket.connect();
 			return socket;
-		} catch (Exception e) {
-			//Log.v("websocket", e.toString());
-			if(th != null) {
+		}
+		catch (Exception e)
+		{
+			// Log.v("websocket", e.toString());
+			if (th != null)
+			{
 				th.interrupt();
 			}
-		} 
+		}
 		return null;
 	}
 
@@ -82,7 +86,8 @@ public class WebSocketFactory {
 	 * 
 	 * @return String
 	 */
-	private String getRandonUniqueId() {
+	private String getRandonUniqueId()
+	{
 		return "WEBSOCKET." + new Random().nextInt(100);
 	}
 

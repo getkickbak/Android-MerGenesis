@@ -24,9 +24,10 @@
       directory and include it here -->
       
       <script type="text/javascript" src="lib/gibberish-aes.min.js"></script>
-      <script type="text/javascript" src="lib/cordova-2.6.0.android.js"></script>
+      <script type="text/javascript" src="lib/cordova-2.8.1.android.js"></script>
       <script type="text/javascript" src="lib/core/websocket.js"></script>
       <script type="text/javascript" charset="utf-8" src="lib/core/phonegap-nfc.js"></script>
+      <script type="text/javascript" src="lib/core/WifiConnMgr.js"></script>
 
       <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
       <script type="text/javascript" src="worker/server.js"></script>
@@ -124,6 +125,10 @@
                if (Ext.device)
                {
                   console.log("App is Resumed");
+                  if ((typeof(isPosEnabled) != 'undefined') && isPosEnabled())
+                  {
+                     window.plugins.WifiConnMgr.establishPosConn();
+                  }
                   //posConnect();
                }
             }, false);

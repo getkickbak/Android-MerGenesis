@@ -332,6 +332,7 @@ public class NfcPlugin extends CordovaPlugin
 
 	private void startNfc()
 	{
+		Log.d(TAG, "startNfc");
 		createPendingIntent(); // onResume can call startNfc before execute
 
 		getActivity().runOnUiThread(new Runnable()

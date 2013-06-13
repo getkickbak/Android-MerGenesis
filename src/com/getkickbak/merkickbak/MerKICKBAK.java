@@ -12,11 +12,15 @@ import android.view.Display;
 import android.view.Menu;
 import org.apache.cordova.*;
 
-import com.getkickbak.plugin.WebSocketFactory;
+import com.getkickbak.plugin.wifimanager.Manager;
+import com.getkickbak.plugin.websocket.WebSocketFactory;
 
 public class MerKICKBAK extends DroidGap
 {
-	static public Boolean singleTask = false;
+	static public Boolean    singleTask = false;
+
+	private WebSocketFactory factory;
+
 	/*********************************************************
 	 * SSCL Native Function
 	 *********************************************************/
@@ -32,17 +36,18 @@ public class MerKICKBAK extends DroidGap
 		try
 		{
 			super.onCreate(savedInstanceState);
-
 			// setContentView(R.layout.activity_kick_bak);
 			super.setIntegerProperty("loadUrlTimeoutValue", 60000);
 			super.setIntegerProperty("splashscreen", R.drawable.splash);
 			super.loadUrl("file:///android_asset/www/index.html", 10000);
-
+			
 			// 4.2.2 and up, WebSocket is built-in
-			//if (((Build.VERSION_CODES.JELLY_BEAN_MR1 == Build.VERSION.SDK_INT) && (!Build.VERSION.RELEASE.startsWith("4.2.2"))) || //
-			//      (Build.VERSION_CODES.JELLY_BEAN_MR1 > Build.VERSION.SDK_INT))
+			// if (((Build.VERSION_CODES.JELLY_BEAN_MR1 == Build.VERSION.SDK_INT) && (!Build.VERSION.RELEASE.startsWith("4.2.2"))) ||
+			// //
+			// (Build.VERSION_CODES.JELLY_BEAN_MR1 > Build.VERSION.SDK_INT))
 			{
-				appView.addJavascriptInterface(new WebSocketFactory(appView), "WebSocketFactory");
+				factory = new WebSocketFactory(appView);
+				appView.addJavascriptInterface(factory, "WebSocketFactory");
 			}
 
 			appView.getSettings().setGeolocationDatabasePath(this.getContext().getFilesDir().getPath() + "/");
@@ -85,6 +90,13 @@ public class MerKICKBAK extends DroidGap
 		}
 		catch (Throwable e)
 		{}
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		factory.onDestroy();
+		super.onDestroy();
 	}
 
 	@Override

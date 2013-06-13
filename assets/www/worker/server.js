@@ -3,7 +3,7 @@ var createReceipts = function(scope)
    var createStatement = "CREATE TABLE IF NOT EXISTS Receipt (id INTEGER PRIMARY KEY, receipt TEXT, sync INTEGER)";
    var countStatement = "SELECT COUNT(id) AS cnt FROM Receipt";
    var countSyncStatement = "SELECT COUNT(id) AS cnt FROM Receipt WHERE sync=1";
-   var db = openDatabase('KickBak', '1.0', 'ReceiptStore', 5 * 1024 * 1024);
+   var db = Genesis.db.openDatabase();
    try
    {
       db.transaction(function(tx)
@@ -47,7 +47,7 @@ var createReceipts = function(scope)
 }
 var uploadReceipts = function(lastReceiptTime, scope)
 {
-   var db = openDatabase('KickBak', '1.0', 'ReceiptStore', 5 * 1024 * 1024);
+   var db = Genesis.db.openDatabase();
    //var createStatement = "CREATE TABLE IF NOT EXISTS Receipt (id INTEGER PRIMARY KEY, receipt TEXT, sync INTEGER)";
    var selectAllStatement = "SELECT receipt FROM Receipt WHERE sync=0";
    var deleteStatement = "DELETE FROM Receipt WHERE id<? AND sync=1";
@@ -99,7 +99,7 @@ var uploadReceipts = function(lastReceiptTime, scope)
 };
 var insertReceipts = function(receipts, scope)
 {
-   var db = openDatabase('KickBak', '1.0', 'ReceiptStore', 5 * 1024 * 1024);
+   var db = Genesis.db.openDatabase();
    var insertStatement = "INSERT INTO Receipt (id, receipt, sync) VALUES (?, ?, ?)";
    try
    {
@@ -133,7 +133,7 @@ var insertReceipts = function(receipts, scope)
 };
 var updateReceipts = function(ids, scope)
 {
-   var db = openDatabase('KickBak', '1.0', 'ReceiptStore', 5 * 1024 * 1024);
+   var db = Genesis.db.openDatabase();
    var updateStatement = "UPDATE Receipt SET sync=1 WHERE id IN (" + ids.toString() + ")";
    //console.debug("UPDATE Receipt SET sync=1 WHERE id IN (" + ids.toString() + ")")s;
    try
@@ -172,7 +172,7 @@ var updateReceipts = function(ids, scope)
 };
 var restoreReceipts = function(scope)
 {
-   var db = openDatabase('KickBak', '1.0', 'ReceiptStore', 5 * 1024 * 1024);
+   var db = Genesis.db.openDatabase();
    var selectAllStatement = "SELECT receipt FROM Receipt";
    try
    {
@@ -206,7 +206,7 @@ var restoreReceipts = function(scope)
 };
 var resetReceipts = function(scope)
 {
-   var db = openDatabase('KickBak', '1.0', 'ReceiptStore', 5 * 1024 * 1024);
+   var db = Genesis.db.openDatabase();
    var dropStatement = "DROP TABLE Receipt";
    try
    {
@@ -338,6 +338,13 @@ else
 {
    var Genesis =
    {
+      db :
+      {
+         openDatabase : function()
+         {
+            return openDatabase('KickBak', '1.0', 'KickBakDB', 5 * 1024 * 1024);
+         }
+      },
       fn :
       {
          convertDateFullTime : function(v)

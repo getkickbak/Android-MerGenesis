@@ -117,6 +117,8 @@ else
 {
    if (!WebSocket.store)
    {
-      WebSocket.store = {};
+      WebSocket.store =
+      {
+      };
    }
 }

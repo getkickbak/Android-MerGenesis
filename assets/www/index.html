@@ -35,23 +35,22 @@
       Phone Gap Libs
       -->
       <script type="text/javascript">
-         var launched = 0x00;
-         var backBtnCallbackListFn = [];
-
-         var offlineDialogShown = false;
-         var phoneGapAvailable = true;
-         var debugMode = true;
-         var serverHost;
-         //serverHost = 'http://192.168.0.52:3000';
-         //serverHost = 'http://192.168.0.46:3000';
-		   //serverHost = 'http://76.10.173.153';
-		   serverHost = 'http://www.dev1getkickbak.com';
-		   //serverHost = 'http://www.devgetkickbak.com';
-		   //serverHost = 'http://www.getkickbak.com';
-         var merchantMode = true;
-         var appName = 'MerKickBak';
+         var launched = 0x00, backBtnCallbackListFn = [], offlineDialogShown = false, phoneGapAvailable = true;
+         var debugMode = false, serverHost, merchantMode = true, _application;
+         var appName = 'MerKickBak', _appPath = "app", _extPath = 'lib/touch-2.1.1/src';
          
-         var _appPath = "app", _extPath = 'lib/touch-2.1.1/src';
+         if (debugMode)
+         {
+            //serverHost = 'http://192.168.0.52:3000';
+            //serverHost = 'http://192.168.0.46:3000';
+            //serverHost = 'http://76.10.173.153';
+            serverHost = 'http://www.dev1getkickbak.com';
+            //serverHost = 'http://www.devgetkickbak.com';
+         }
+         else
+         {
+            serverHost = 'http://www.getkickbak.com';            
+         }
 
          function _appLaunch()
          {

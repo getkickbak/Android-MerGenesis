@@ -36,7 +36,7 @@
       -->
       <script type="text/javascript">
          var launched = 0x00, backBtnCallbackListFn = [], offlineDialogShown = false, phoneGapAvailable = true;
-         var debugMode = false, serverHost, merchantMode = true, _application;
+         var debugMode = false, serverHost, merchantMode = true, _application, _filesAssetCount;
          var appName = 'MerKickBak', _appPath = "app", _extPath = 'lib/touch-2.1.1/src';
          
          if (debugMode)
@@ -60,7 +60,7 @@
                viewport.appName = appName;
 
                Ext.create('Genesis.view.Viewport');
-               console.log("Launched App");
+               console.debug("Launched App");
                navigator.splashscreen.hide();               
             }
          }
@@ -94,7 +94,7 @@
             {
                if (Ext.device)
                {
-                  console.log("Phone is Online"+ ", " + //
+                  console.debug("Phone is Online"+ ", " + //
                   Ext.device.Connection.__proto__.$className + ", " + //
                   "devicePixelRatio - " + window.devicePixelRatio + ", " + //
                   'Connection type: [' + Ext.device.Connection.getType() + ']');
@@ -106,7 +106,7 @@
             {
                if (Ext.device)
                {
-                  console.log("Phone is Offline");
+                  console.debug("Phone is Offline");
                   posDisconnect();
                }
             }, false);
@@ -114,7 +114,7 @@
             {
                if (Ext.device)
                {
-                  console.log("App is Paused");
+                  console.debug("App is Paused");
                   //posDisconnect();
                }
             }, false);
@@ -123,7 +123,7 @@
             {
                if (Ext.device)
                {
-                  console.log("App is Resumed");
+                  console.debug("App is Resumed");
                   if ((typeof(isPosEnabled) != 'undefined') && isPosEnabled())
                   {
                      window.plugins.WifiConnMgr.establishPosConn();
@@ -135,10 +135,10 @@
             {
                navigator.splashscreen.show();
                
-               console.debug = console.debug || console.log;
+               console.debug = (!debugMode) ? Ext.emptyFn : console.debug || console.log;
                console.warn = console.warn || console.debug;
 
-               console.log("PhoneGap App Launch");
+               console.debug("PhoneGap App Launch");
                launched = 0x10;
                _appLaunch();
             }, false);
@@ -172,7 +172,7 @@
                   {
                      launched = 0x01;
                   }
-                  console.log("Ext App Launch");
+                  console.debug("Ext App Launch");
                   document.addEventListener("backbutton", onBackKeyDown, false);
                   _appLaunch();
                },
@@ -189,7 +189,7 @@
       <script type="text/javascript">
          window.onerror = function(e, url, linenum)
          {
-            console.log("Error on Line#" + linenum + "\n" + e);
+            console.debug("Error on Line#" + linenum + "\n" + e);
          }
       </script>
       <!-- Cache images -->

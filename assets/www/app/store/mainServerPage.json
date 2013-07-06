@@ -1,7 +1,7 @@
 {
    "data": [
       {
-         "id": "reward",
+         "id": "rewards",
          "name": "Earn Reward Pts",
          "photo_url": "resources/themes/images/{platform_path}/mainicons/rewards.png",
          "desc": "Rewards",

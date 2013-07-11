@@ -17,7 +17,8 @@ rsync -pvtrlL --delete --cvs-exclude "$appPath"/app/profile/Android.js $PROJECT_
                                                           
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/*.wav $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/*.htm $PROJECT_DIR/www/
-rsync -pvtrlL --delete --cvs-exclude "$appPath"/worker/server.js $PROJECT_DIR/www/worker/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/WebWorkerConsole.js $PROJECT_DIR/www/
+rsync -pvtrlL --delete --cvs-exclude "$appPath"/worker/receipt.js $PROJECT_DIR/www/worker/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/server-all.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/core.js $PROJECT_DIR/www/
 rsync -pvtrlL --delete --cvs-exclude "$appPath"/index_android_server.html $PROJECT_DIR/www/index.html

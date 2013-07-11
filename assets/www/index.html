@@ -22,21 +22,9 @@
       <link rel="stylesheet" type="text/css" href="resources/css/android-phone-lhdpi.css">
       <script src="http://192.168.0.52:8081/target/target-script-min.js#client"></script>       
       directory and include it here -->
-      
-      <script type="text/javascript" src="lib/gibberish-aes.min.js"></script>
-      <script type="text/javascript" src="lib/cordova-2.8.1.android.js"></script>
-      <script type="text/javascript" src="lib/core/websocket.js"></script>
-      <script type="text/javascript" charset="utf-8" src="lib/core/phonegap-nfc.js"></script>
-      <script type="text/javascript" src="lib/core/WifiConnMgr.js"></script>
-
-      <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
-      <script type="text/javascript" src="worker/server.js"></script>
-      <!--
-      Phone Gap Libs
-      -->
       <script type="text/javascript">
          var launched = 0x00, backBtnCallbackListFn = [], offlineDialogShown = false, phoneGapAvailable = true;
-         var debugMode = false, serverHost, merchantMode = true, _application, _filesAssetCount;
+         var debugMode = false, serverHost, merchantMode = true, _application, _filesAssetCount = 0;
          var appName = 'MerKickBak', _appPath = "app", _extPath = 'lib/touch-2.1.1/src';
          
          if (debugMode)
@@ -64,7 +52,15 @@
                navigator.splashscreen.hide();               
             }
          }
-      </script>
+      </script>      
+      <script type="text/javascript" src="lib/gibberish-aes.min.js"></script>
+      <script type="text/javascript" src="lib/cordova-2.8.1.android.js"></script>
+      <script type="text/javascript" src="WebWorkerConsole.js"></script>
+      <script type="text/javascript" src="lib/core/websocket.js"></script>
+      <script type="text/javascript" charset="utf-8" src="lib/core/phonegap-nfc.js"></script>
+      <script type="text/javascript" src="lib/core/WifiConnMgr.js"></script>
+      <script type="text/javascript" src="lib/sencha-touch-all.js"></script>
+      <script type="text/javascript" src="worker/receipt.js"></script>
       <script type="text/javascript">
          // If you want to prevent dragging, uncomment this section
          /*

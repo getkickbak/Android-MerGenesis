@@ -94,7 +94,10 @@
                   Ext.device.Connection.__proto__.$className + ", " + //
                   "devicePixelRatio - " + window.devicePixelRatio + ", " + //
                   'Connection type: [' + Ext.device.Connection.getType() + ']');
-                  posConnect();
+                  if (pos)
+                  {
+                     pos.connect();
+                  }
                }
             }, false);
 
@@ -103,7 +106,10 @@
                if (Ext.device)
                {
                   console.debug("Phone is Offline");
-                  posDisconnect();
+                  if (pos)
+                  {
+                     pos.disconnect();
+                  }
                }
             }, false);
             document.addEventListener("pause", function()
@@ -111,7 +117,7 @@
                if (Ext.device)
                {
                   console.debug("App is Paused");
-                  //posDisconnect();
+                  //pos.disconnect();
                }
             }, false);
 
@@ -120,11 +126,11 @@
                if (Ext.device)
                {
                   console.debug("App is Resumed");
-                  if ((typeof(isPosEnabled) != 'undefined') && isPosEnabled())
+                  if (pos && pos.isEnabled())
                   {
                      window.plugins.WifiConnMgr.establishPosConn();
                   }
-                  //posConnect();
+                  //pos.connect();
                }
             }, false);
             document.addEventListener("deviceready", function()
@@ -155,7 +161,7 @@
                profiles : ['Android'],
                views : ['Document', 'server.Rewards', 'server.Redemptions', 'server.MerchantAccount', 'server.MainPage', //
                'widgets.server.RedeemItemDetail', 'server.SettingsPage', 'server.TagCreatePage', 'Viewport'],
-               controllers : ['server.Viewport', 'server.MainPage', 'server.Challenges',  'server.Receipts', 'server.Rewards',//
+               controllers : ['server.Pos', 'server.Viewport', 'server.MainPage', 'server.Challenges',  'server.Receipts', 'server.Rewards',//
                 'server.Redemptions', 'server.Merchants', 'server.Settings', 'server.Prizes'],
                launch : function()
                {

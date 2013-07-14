@@ -11,10 +11,10 @@
          //
          // Remove staled connection, and reconnect
          //
-         if (wssocket)
+         if (pos && pos.wssocket)
          {
             console.debug("Reconnect with new POS Connection ...");
-            posDisconnect(true);
+            pos.disconnect(true);
          }
       },
       establishPosConn : function()

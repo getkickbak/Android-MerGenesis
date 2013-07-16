@@ -18,61 +18,111 @@
        under the License.
 -->
 <cordova>
+
     <!--
     access elements control the Android whitelist.
     Domains are assumed blocked unless set otherwise
-     -->
+    -->
     <!-- allow local pages -->
-    <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
-    <access origin="http://192.168.0.52"/>
-    <access origin="http://192.168.0.46"/>
-    <access origin="http://76.10.173.153"/> 
-    <access origin="http://dev1getkickbak.com" subdomains="true" />
-    <access origin="http://devgetkickbak.com" subdomains="true" />
-    <access origin="http://getkickbak.com" subdomains="true" />
-    <access origin="http://googleapis.com" subdomains="true" />
-    <access origin="https://s3.amazonaws.com" />
-    <access origin="http://s3.amazonaws.com" />
-    
+    <access origin="127.0.0.1" /> <!-- allow local pages -->
+    <access origin="192.168.0.52" />
+    <access origin="192.168.0.46" />
+    <access origin="76.10.173.153" />
+    <access origin="dev1getkickbak.com" subdomains="true" />
+    <access origin="devgetkickbak.com" subdomains="true" />
+    <access origin="getkickbak.com" subdomains="true" />
+    <access origin="googleapis.com" subdomains="true" />
+    <access origin="s3.amazonaws.com" />
+
     <!-- <access origin="https://example.com" /> allow any secure requests to example.com -->
     <!-- <access origin="https://example.com" subdomains="true" /> such as above, but including subdomains, such as www -->
-    <!--
-    <access origin=".*"/>
-    -->
+    <!-- <access origin=".*"/> -->
+
 
     <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
     <content src="index.html" />
-    
-    <log level="ERROR"/>
+
+    <log level="ERROR" />
+
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
-<plugins>
-    <plugin name="ProximityIDPlugin" value="com.getkickbak.plugin.ProximityIDPlugin"/>
-    <plugin name="NotificationPlugin" value="com.getkickbak.plugin.NotificationPlugin"/>
-    <plugin name="NfcPlugin" value="com.chariotsolutions.nfc.plugin.NfcPlugin"/>
-    <plugin name="WifiConnMgr" value="com.getkickbak.plugin.wifimanager.Manager"/>
-    <plugin name="WebIntent" value="com.borismus.webintent.WebIntent"/>
-    <plugin name="LowLatencyAudio" value="com.phonegap.PGLowLatencyAudio" />
-    <plugin name="BarCodeScanner" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
-    
-    <plugin name="App" value="org.apache.cordova.App"/>
-    <plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
-    <plugin name="Device" value="org.apache.cordova.Device"/>
-    <plugin name="Accelerometer" value="org.apache.cordova.AccelListener"/>
-    <plugin name="Compass" value="org.apache.cordova.CompassListener"/>
-    <plugin name="Media" value="org.apache.cordova.AudioHandler"/>
-    <plugin name="Camera" value="org.apache.cordova.CameraLauncher"/>
-    <plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
-    <plugin name="File" value="org.apache.cordova.FileUtils"/>
-    <plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
-    <plugin name="Notification" value="org.apache.cordova.Notification"/>
-    <plugin name="Storage" value="org.apache.cordova.Storage"/>
-    <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
-    <plugin name="Capture" value="org.apache.cordova.Capture"/>
-    <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
-    <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
-    <plugin name="Echo" value="org.apache.cordova.Echo" />
-    <plugin name="Globalization" value="org.apache.cordova.Globalization" />
-    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
-</plugins>
+
+    <feature name="ProximityIDPlugin" >
+        <param name="android-package" value="com.getkickbak.plugin.ProximityIDPlugin" />
+    </feature>
+    <feature name="NotificationPlugin" >
+        <param name="android-package" value="com.getkickbak.plugin.NotificationPlugin" />
+    </feature>
+    <feature name="NfcPlugin" >
+        <param name="android-package" value="com.chariotsolutions.nfc.plugin.NfcPlugin" />
+    </feature>
+    <feature name="WifiConnMgr" >
+        <param name="android-package" value="com.getkickbak.plugin.wifimanager.Manager" />
+    </feature>
+    <feature name="WebIntent" >
+        <param name="android-package" value="com.borismus.webintent.WebIntent" />
+    </feature>
+    <feature name="LowLatencyAudio" >
+        <param name="android-package" value="com.phonegap.PGLowLatencyAudio" />
+    </feature>
+    <feature name="BarCodeScanner" >
+        <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />
+    </feature>
+    <feature name="App" >
+        <param name="android-package" value="org.apache.cordova.App" />
+    </feature>
+    <feature name="Geolocation" >
+        <param name="android-package" value="org.apache.cordova.GeoBroker" />
+    </feature>
+    <feature name="Device" >
+        <param name="android-package" value="org.apache.cordova.Device" />
+    </feature>
+    <feature name="Accelerometer" >
+        <param name="android-package" value="org.apache.cordova.Accelerometer" />
+    </feature>
+    <feature name="Compass" >
+        <param name="android-package" value="org.apache.cordova.CompassListener" />
+    </feature>
+    <feature name="Media" >
+        <param name="android-package" value="org.apache.cordova.AudioHandler" />
+    </feature>
+    <feature name="Camera" >
+        <param name="android-package" value="org.apache.cordova.CameraLauncher" />
+    </feature>
+    <feature name="Contacts" >
+        <param name="android-package" value="org.apache.cordova.ContactManager" />
+    </feature>
+    <feature name="File" >
+        <param name="android-package" value="org.apache.cordova.FileUtils" />
+    </feature>
+    <feature name="NetworkStatus" >
+        <param name="android-package" value="org.apache.cordova.NetworkManager" />
+    </feature>
+    <feature name="Notification" >
+        <param name="android-package" value="org.apache.cordova.Notification" />
+    </feature>
+    <feature name="Storage" >
+        <param name="android-package" value="org.apache.cordova.Storage" />
+    </feature>
+    <feature name="FileTransfer" >
+        <param name="android-package" value="org.apache.cordova.FileTransfer" />
+    </feature>
+    <feature name="Capture" >
+        <param name="android-package" value="org.apache.cordova.Capture" />
+    </feature>
+    <feature name="Battery" >
+        <param name="android-package" value="org.apache.cordova.BatteryListener" />
+    </feature>
+    <feature name="SplashScreen" >
+        <param name="android-package" value="org.apache.cordova.SplashScreen" />
+    </feature>
+    <feature name="Echo" >
+        <param name="android-package" value="org.apache.cordova.Echo" />
+    </feature>
+    <feature name="Globalization" >
+        <param name="android-package" value="org.apache.cordova.Globalization" />
+    </feature>
+    <feature name="InAppBrowser" >
+        <param name="android-package" value="org.apache.cordova.InAppBrowser" />
+    </feature>
 </cordova>

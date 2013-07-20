@@ -89,55 +89,54 @@
           for more details -jm */
          function onBodyLoad()
          {
-            document.addEventListener("online", function()
-            {
-               if (Ext.device)
-               {
-                  console.debug("Phone is Online"+ ", " + //
-                  Ext.device.Connection.__proto__.$className + ", " + //
-                  "devicePixelRatio - " + window.devicePixelRatio + ", " + //
-                  'Connection type: [' + Ext.device.Connection.getType() + ']');
-                  if (pos)
-                  {
-                     pos.connect();
-                  }
-               }
-            }, false);
-
-            document.addEventListener("offline", function()
-            {
-               if (Ext.device)
-               {
-                  console.debug("Phone is Offline");
-                  if (pos)
-                  {
-                     pos.disconnect();
-                  }
-               }
-            }, false);
-            document.addEventListener("pause", function()
-            {
-               if (Ext.device)
-               {
-                  console.debug("App is Paused");
-                  //pos.disconnect();
-               }
-            }, false);
-
-            document.addEventListener("resume", function()
-            {
-               if (Ext.device)
-               {
-                  console.debug("App is Resumed");
-                  if (pos && pos.isEnabled())
-                  {
-                     window.plugins.WifiConnMgr.establishPosConn();
-                  }
-                  //pos.connect();
-               }
-            }, false);
             document.addEventListener("deviceready", function()
             {
+               document.addEventListener("online", function()
+               {
+                  if (Ext.device)
+                  {
+                     console.debug("Phone is Online"+ ", " + //
+                     Ext.device.Connection.__proto__.$className + ", " + //
+                     "devicePixelRatio - " + window.devicePixelRatio + ", " + //
+                     'Connection type: [' + Ext.device.Connection.getType() + ']');
+                     if (pos)
+                     {
+                        pos.connect();
+                     }
+                  }
+               }, false);   
+               document.addEventListener("offline", function()
+               {
+                  if (Ext.device)
+                  {
+                     console.debug("Phone is Offline");
+                     if (pos)
+                     {
+                        pos.disconnect();
+                     }
+                  }
+               }, false);
+               document.addEventListener("pause", function()
+               {
+                  if (Ext.device)
+                  {
+                     console.debug("App is Paused");
+                     //pos.disconnect();
+                  }
+               }, false);   
+               document.addEventListener("resume", function()
+               {
+                  if (Ext.device)
+                  {
+                     console.debug("App is Resumed");
+                     if (pos && pos.isEnabled())
+                     {
+                        window.plugins.WifiConnMgr.establishPosConn();
+                     }
+                     //pos.connect();
+                  }
+               }, false);
+               document.addEventListener("backbutton", onBackKeyDown, false);
                navigator.splashscreen.show();
                
                console.debug = (!debugMode) ? Ext.emptyFn : console.debug || console.log;
@@ -178,7 +177,6 @@
                      launched = 0x01;
                   }
                   console.debug("Ext App Launch");
-                  document.addEventListener("backbutton", onBackKeyDown, false);
                   _appLaunch();
                },
                appFolder : _appPath,

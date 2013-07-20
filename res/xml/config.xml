@@ -18,7 +18,6 @@
        under the License.
 -->
 <cordova>
-
     <!--
     access elements control the Android whitelist.
     Domains are assumed blocked unless set otherwise
@@ -43,7 +42,6 @@
     <content src="index.html" />
 
     <log level="ERROR" />
-
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
 
@@ -64,9 +62,6 @@
     </feature>
     <feature name="LowLatencyAudio" >
         <param name="android-package" value="com.phonegap.PGLowLatencyAudio" />
-    </feature>
-    <feature name="BarCodeScanner" >
-        <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />
     </feature>
     <feature name="App" >
         <param name="android-package" value="org.apache.cordova.App" />

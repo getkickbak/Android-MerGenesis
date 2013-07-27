@@ -28,6 +28,7 @@ if (self.console && self.console.log)
    _filesAssetCount++;
    if ( typeof (MessageChannel) != 'undefined')
    {
+      console.debug("Defining WebWorker Console ...");
       /*
       * If there is already a console.log() function defined, then wrap the
       * Worker() constructor so that workers get console.log(), too.

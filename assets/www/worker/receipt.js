@@ -298,6 +298,33 @@ if (( typeof (Worker) == 'undefined') && ( typeof (Ext) != 'undefined'))
 }
 else
 {
+   if ( typeof (importScripts) != 'undefined')
+   {
+      var prefix;
+      //
+      // Desktop testing mode
+      //
+      if (location.href.match('testing'))
+      {
+         prefix = '..'
+      }
+      //
+      // Native code or emualtor
+      //
+      else if (location.href.match(/mobileServer/i))
+      {
+         prefix = '../..';
+      }
+      //
+      // Desktop production mode
+      //
+      else
+      {
+         prefix = '/merchant';
+      }
+      importScripts(prefix + '/lib/core/date.js', prefix + '/lib/core/extras.js');
+   }
+
    onmessage = function(e)
    {
       var data = e.data;
@@ -335,7 +362,7 @@ else
          }
       }
    };
-   
+
    var Genesis =
    {
       db :
@@ -457,9 +484,4 @@ else
          }
       }
    };
-}
-
-if ( typeof (importScripts) != 'undefined')
-{
-   importScripts('../lib/core/date.js', '../lib/core/extras.js');
 }
